@@ -1,0 +1,1630 @@
+/* Global design tokens for the static prototype. */
+:root {
+  --bg: #f6f5f3;
+  --surface: #ffffff;
+  --muted: #8f8f8f;
+  --text: #202020;
+  --soft: #efeeee;
+  --line: #e5e2de;
+  --dark: #171717;
+  --green: #2e8b57;
+}
+
+/* Base reset and typography. Keep this file dependency-free for static hosting. */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+/* Shared icon utilities for inline SVGs generated in app.js. */
+.ui-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+.brand-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* Homepage: AnyGen-style three-column workspace shell. */
+.app-shell {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 284px 1fr 344px;
+  gap: 0;
+  padding: 18px;
+  overflow: hidden;
+}
+
+/* Homepage left sidebar: workspace navigation, projects, recent items, and account entry. */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 36px);
+  min-height: 0;
+  padding: 20px 18px;
+  overflow: hidden;
+  background: #f1f0ee;
+  border-radius: 26px 0 0 26px;
+}
+
+.brand-row,
+.icon-row,
+.user-row {
+  display: flex;
+  align-items: center;
+}
+
+.brand-row {
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.brand-mark,
+.avatar,
+.small-avatar,
+.icon-dot {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #dedbd7;
+  color: #555;
+}
+
+.brand-mark {
+  width: 30px;
+  height: 30px;
+  background: var(--dark);
+  color: #fff;
+}
+
+.brand-title {
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.search-icon {
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  color: #777;
+}
+
+.assistant-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  color: #333;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  background: #d9eadf;
+}
+
+.beta {
+  margin-left: 4px;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: #777;
+  font-size: 12px;
+}
+
+.nav-list {
+  display: grid;
+  gap: 4px;
+}
+
+.nav-item,
+.section-head,
+.recent-item {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  border-radius: 11px;
+  color: #494949;
+}
+
+.nav-item {
+  gap: 12px;
+  padding: 0 9px;
+  text-decoration: none;
+}
+
+.nav-item.active,
+.recent-item.active {
+  background: #e5e3e0;
+  color: #111;
+}
+
+.nav-icon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  color: #666;
+  text-align: center;
+}
+
+.section-head {
+  justify-content: space-between;
+  margin-top: 18px;
+  padding: 0 9px;
+  color: #8a8a8a;
+  font-size: 14px;
+}
+
+.recent-list {
+  display: grid;
+  min-height: 0;
+  overflow: auto;
+  gap: 2px;
+  scrollbar-width: none;
+}
+
+.recent-list::-webkit-scrollbar {
+  display: none;
+}
+
+.recent-item {
+  padding: 0 9px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sidebar-footer {
+  position: relative;
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+/* Account entry in the lower-left sidebar.
+   It remains visible while the recent list scrolls, matching ChatGPT's account affordance. */
+.user-row,
+.account-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.account-trigger {
+  width: 100%;
+  padding: 8px 6px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.account-trigger:hover,
+.account-trigger[aria-expanded="true"] {
+  background: #e5e3e0;
+}
+
+.user-row .avatar {
+  background: #387b2d;
+  color: #fff;
+}
+
+.account-trigger .avatar {
+  background: #387b2d;
+  color: #fff;
+}
+
+.user-meta {
+  line-height: 1.25;
+}
+
+.user-meta span {
+  display: block;
+  color: #8b8b8b;
+  font-size: 13px;
+}
+
+/* ChatGPT-style account menu launched from the lower-left account trigger. */
+.account-menu {
+  position: absolute;
+  z-index: 120;
+  left: 0;
+  right: 0;
+  bottom: 72px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 46px rgba(38, 33, 28, 0.18);
+}
+
+.account-menu-profile,
+.account-menu-item {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #202020;
+  text-align: left;
+}
+
+.account-menu-profile {
+  grid-template-columns: 34px 1fr auto;
+  gap: 10px;
+  min-height: 50px;
+  padding: 6px;
+}
+
+.account-menu-profile strong,
+.account-menu-profile span,
+.account-menu-item strong {
+  display: block;
+}
+
+.account-menu-profile span {
+  color: #888;
+  font-weight: 400;
+}
+
+.profile-arrow {
+  color: #777;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.account-menu-item {
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  min-height: 42px;
+  padding: 0 8px;
+}
+
+.account-menu-item:hover,
+.account-menu-profile:hover {
+  background: #f2f1ef;
+}
+
+.account-menu-item span {
+  display: grid;
+  place-items: center;
+  color: #333;
+}
+
+.account-menu-item .ui-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.account-menu-separator {
+  height: 1px;
+  margin: 8px 0;
+  background: var(--line);
+}
+
+/* Settings modal for Account > Personalization > About you.
+   The backdrop closes the modal; clicks inside .settings-modal stop propagation in app.js. */
+.modal-backdrop {
+  position: fixed;
+  z-index: 300;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.26);
+}
+
+.settings-modal {
+  width: min(1050px, calc(100vw - 48px));
+  height: min(760px, calc(100vh - 48px));
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.22);
+}
+
+.settings-sidebar {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 24px 14px;
+  background: #f7f6f4;
+  border-right: 1px solid var(--line);
+}
+
+/* Left settings navigation. Only "个性化" is active in the current prototype. */
+.settings-nav-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #222;
+  text-align: left;
+}
+
+.settings-nav-item.active,
+.settings-nav-item:hover {
+  background: #ecebea;
+}
+
+.settings-content {
+  position: relative;
+  overflow: auto;
+  padding: 56px 48px;
+}
+
+.settings-close {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #555;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.settings-close:hover {
+  background: #f2f1ef;
+}
+
+.settings-content h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.settings-divider {
+  height: 1px;
+  margin: 28px 0 26px;
+  background: var(--line);
+}
+
+/* "关于你" form fields. These are display-only mock controls until account persistence exists. */
+.settings-field {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.settings-field span {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.settings-field input,
+.settings-field textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  background: #fff;
+  color: #222;
+  font-size: 17px;
+  outline: 0;
+}
+
+.settings-field input {
+  height: 56px;
+  padding: 0 18px;
+}
+
+.settings-field textarea {
+  min-height: 96px;
+  resize: vertical;
+  padding: 16px 18px;
+}
+
+.settings-field input::placeholder,
+.settings-field textarea::placeholder {
+  color: #aaa;
+}
+
+.memory-panel {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+  margin-top: 36px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.memory-panel h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.memory-panel p {
+  margin: 0;
+  color: #888;
+  line-height: 1.5;
+}
+
+.switch-control input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.switch-control span {
+  display: block;
+  width: 52px;
+  height: 30px;
+  padding: 3px;
+  border-radius: 999px;
+  background: #3b82f6;
+}
+
+.switch-control span::after {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  border-radius: 999px;
+  background: #fff;
+}
+
+/* Homepage center canvas: task launcher, capability pills, scenario pills, and templates. */
+.main-canvas {
+  min-height: calc(100vh - 36px);
+  max-height: calc(100vh - 36px);
+  overflow: auto;
+  padding: 34px 46px 38px;
+  background: var(--surface);
+  border-left: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.top-score {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.score-pill,
+.status-pill,
+.capsule,
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.score-pill {
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: #666;
+}
+
+.score-pill .ui-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.hero {
+  max-width: 900px;
+  margin: 70px auto 0;
+  text-align: center;
+}
+
+.status-pill {
+  gap: 10px;
+  height: 38px;
+  padding: 0 16px 0 8px;
+  border-radius: 999px;
+  background: #fbf8f6;
+  color: #333;
+}
+
+.small-avatar {
+  width: 32px;
+  height: 32px;
+  background: #ead7cb;
+}
+
+.hero h1 {
+  margin: 36px 0 28px;
+  color: #444;
+  font-size: 36px;
+  font-weight: 400;
+}
+
+/* Primary task launcher. This is a task entry point, not a chat conversation surface. */
+.prompt-box {
+  height: 142px;
+  padding: 22px;
+  border: 1px solid #ddd8d3;
+  border-radius: 24px;
+  box-shadow: 0 12px 28px rgba(38, 33, 28, 0.08);
+  text-align: left;
+}
+
+.prompt-box textarea {
+  width: 100%;
+  height: 70px;
+  resize: none;
+  border: 0;
+  outline: 0;
+  color: #333;
+  background: transparent;
+  font-size: 18px;
+}
+
+.prompt-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #555;
+}
+
+.prompt-actions span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.prompt-actions .ui-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.prompt-actions .spacer {
+  flex: 1;
+}
+
+.round-btn {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: #deddda;
+  color: #fff;
+}
+
+.round-btn .ui-icon {
+  width: 21px;
+  height: 21px;
+  stroke-width: 2.1;
+}
+
+.capsules {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.capsule {
+  height: 40px;
+  gap: 8px;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: #2d2d2d;
+  background: #fff;
+}
+
+.capsule .ui-icon {
+  width: 18px;
+  height: 18px;
+  color: #555;
+}
+
+.capsule.primary .ui-icon {
+  color: #222;
+}
+
+.capsule.primary {
+  border-color: #2f2f2f;
+  background: #f7f7f7;
+}
+
+.templates {
+  margin-top: 92px;
+}
+
+.tab-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  color: #888;
+  font-weight: 600;
+}
+
+.tab-row .active {
+  color: #222;
+  border-bottom: 2px solid #222;
+  padding-bottom: 8px;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 26px;
+}
+
+.template-card {
+  min-height: 142px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.thumb {
+  height: 70px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f5f3ef, #e9e6df);
+}
+
+/* Homepage right panel: lightweight customer psychology preview. */
+.right-panel {
+  min-height: calc(100vh - 36px);
+  max-height: calc(100vh - 36px);
+  overflow: auto;
+  padding: 28px 20px;
+  background: #fbfaf8;
+  border-left: 1px solid var(--line);
+  border-radius: 0 26px 26px 0;
+}
+
+.right-panel h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.right-panel > p {
+  margin: 8px 0 20px;
+  color: #888;
+}
+
+/* Shared customer voice card primitives used by homepage and task page. */
+.voice-list {
+  display: grid;
+  gap: 14px;
+}
+
+.voice-card {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.voice-head {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 11px;
+  align-items: start;
+}
+
+.voice-head .avatar {
+  width: 42px;
+  height: 42px;
+}
+
+/* Customer hover anchor. The popover is intentionally nested here to keep one hover system. */
+.avatar-hover {
+  position: relative;
+  width: 42px;
+  height: 42px;
+}
+
+.hover-avatar {
+  border: 0;
+  cursor: default;
+  font: inherit;
+  font-weight: 700;
+  transition: box-shadow 0.16s ease, transform 0.16s ease, background 0.16s ease;
+}
+
+/* Visible hover feedback so users discover that customer cards are inspectable. */
+.task-voice-card:hover .hover-avatar,
+.hover-avatar:focus-visible {
+  background: #c9e4d2;
+  box-shadow: 0 0 0 4px rgba(46, 139, 87, 0.14);
+  outline: 0;
+  transform: scale(1.06);
+}
+
+/* Single-layer customer quick profile popover.
+   Do not add another global/fixed hover layer without removing this one, or double popovers return. */
+.task-voice-card:hover .customer-popover,
+.avatar-hover:focus-within .customer-popover,
+.avatar-hover:hover .customer-popover {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-8px, -8px) scale(1);
+}
+
+/* Popover opens toward the center column, leaving the right voice list readable. */
+.customer-popover {
+  position: absolute;
+  z-index: 60;
+  top: -8px;
+  right: calc(100% + 10px);
+  width: 340px;
+  max-height: 72vh;
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 45px rgba(38, 33, 28, 0.16);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-2px, -8px) scale(0.98);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.customer-popover::before {
+  position: absolute;
+  top: 22px;
+  right: -7px;
+  width: 12px;
+  height: 12px;
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  background: #fff;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.popover-head {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 11px;
+  align-items: start;
+}
+
+.popover-head strong,
+.popover-head span {
+  display: block;
+}
+
+.popover-head span {
+  margin-top: 2px;
+  color: #777;
+  font-size: 14px;
+}
+
+.customer-popover section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.customer-popover h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.customer-popover p {
+  margin: 0;
+  color: #444;
+  line-height: 1.55;
+}
+
+.customer-popover ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  color: #555;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.voice-name {
+  font-weight: 700;
+}
+
+.voice-age {
+  color: #777;
+  font-size: 14px;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.meta-pill {
+  min-height: 26px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: #f1efeb;
+  color: #666;
+  font-size: 12px;
+}
+
+.quote {
+  margin: 12px 0 0;
+  color: #333;
+  line-height: 1.55;
+}
+
+/* Exploration page: skill library view. */
+.skills-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 18px;
+  padding: 18px;
+}
+
+.icon-rail {
+  min-height: calc(100vh - 36px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 0;
+  background: #f1f0ee;
+  border-radius: 24px;
+}
+
+.rail-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  color: #555;
+}
+
+.rail-icon .ui-icon {
+  width: 21px;
+  height: 21px;
+}
+
+.rail-icon.active {
+  background: #dedbd7;
+  color: #111;
+}
+
+.rail-spacer {
+  flex: 1;
+}
+
+.skills-main {
+  min-height: calc(100vh - 36px);
+  padding: 68px 78px;
+  background: #fff;
+  border-radius: 28px;
+}
+
+.skills-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+
+.skills-header h1 {
+  margin: 0 0 12px;
+  font-size: 34px;
+}
+
+.skills-header p {
+  margin: 0;
+  color: #666;
+  font-size: 17px;
+}
+
+.create-skill {
+  height: 42px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+}
+
+.skill-toolbar {
+  display: grid;
+  grid-template-columns: 1fr 310px;
+  gap: 24px;
+  align-items: center;
+  margin: 40px 0 26px;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category {
+  height: 38px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: #777;
+}
+
+.category.active {
+  background: #111;
+  color: #fff;
+}
+
+.skill-search {
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #888;
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.skill-card {
+  position: relative;
+  min-height: 210px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: #fff;
+}
+
+.skill-card.hovered {
+  background: #f1f1f1;
+}
+
+.skill-card h3 {
+  margin: 14px 0 12px;
+  font-size: 21px;
+}
+
+.skill-card p {
+  margin: 0;
+  color: #777;
+  line-height: 1.55;
+}
+
+.skill-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #e7e4df;
+}
+
+.skill-foot {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  color: #777;
+  font-size: 14px;
+}
+
+.switch-wrap {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+  font-size: 13px;
+}
+
+.switch {
+  width: 42px;
+  height: 24px;
+  padding: 3px;
+  border-radius: 999px;
+  background: #111;
+}
+
+.switch::after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin-left: auto;
+  border-radius: 999px;
+  background: #fff;
+}
+
+/* Task detail page: left collapsed navigation, center workflow, right customer voice stream. */
+
+.task-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 64px minmax(620px, 1fr) 348px;
+  gap: 18px;
+  padding: 18px;
+}
+
+/* Task left rail mirrors AnyGen's collapsed navigation pattern. */
+.task-rail {
+  min-height: calc(100vh - 36px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 0;
+  background: #f1f0ee;
+  border-radius: 24px;
+}
+
+.task-logo,
+.task-rail-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #555;
+}
+
+.task-logo .brand-icon,
+.task-rail-icon .ui-icon {
+  width: 21px;
+  height: 21px;
+}
+
+.task-logo {
+  margin-bottom: 6px;
+  background: #161616;
+  color: #fff;
+}
+
+.task-rail-icon.active {
+  background: #dedbd7;
+  color: #111;
+}
+
+.task-rail-spacer {
+  flex: 1;
+}
+
+/* Main workflow surface. Bottom padding leaves room for the fixed task input bar. */
+.task-main {
+  position: relative;
+  min-height: calc(100vh - 36px);
+  display: flex;
+  flex-direction: column;
+  padding: 28px 30px 112px;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 28px;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.task-type,
+.card-kicker,
+.bubble-label {
+  color: #8a8a8a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.task-header h1 {
+  margin: 8px 0 0;
+  font-size: 24px;
+}
+
+.task-status {
+  align-self: start;
+  padding: 7px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #666;
+  background: #fff;
+}
+
+.task-status.done {
+  color: #22744c;
+  background: #edf7f1;
+  border-color: #cfe9d8;
+}
+
+/* Conversation stack uses message avatars plus structured workflow cards, not free-form chat bubbles. */
+.conversation-stack {
+  display: grid;
+  gap: 14px;
+  max-width: 830px;
+  width: 100%;
+  margin: 24px auto 0;
+  overflow: auto;
+  padding: 0 6px 18px;
+}
+
+/* User and Agent avatar lane for the task workflow. */
+.message-row {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.message-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-top: 2px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: #666;
+}
+
+.message-avatar .ui-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.user-message-avatar {
+  background: #efeeee;
+}
+
+.bot-message-avatar {
+  background: #fbfaf8;
+}
+
+/* Reusable card shell for user request, Agent workflow, and empty conclusion states. */
+.message-card,
+.workflow-card,
+.empty-conclusion {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+}
+
+.user-request {
+  width: min(520px, 100%);
+  padding: 13px 18px;
+  background: #fbfaf8;
+}
+
+.user-request p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Collapsible workflow cards for clarification and survey plan sections. */
+.collapsible-card {
+  position: relative;
+}
+
+.collapsible-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.collapse-toggle {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #555;
+}
+
+.collapse-toggle:hover {
+  background: #f2f1ef;
+}
+
+.collapse-toggle .ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.collapsible-body {
+  margin-top: 16px;
+}
+
+.collapsible-card.collapsed .collapsible-body {
+  display: none;
+}
+
+/* Two focused clarification questions. Keep these as questionnaire choices, not marketing chips. */
+.clarify-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.question-panel {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.clarify-grid h3,
+.plan-grid h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+/* Checkbox-like option buttons used inside clarification cards. */
+.option-list {
+  display: grid;
+  gap: 8px;
+}
+
+.option-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  color: #333;
+}
+
+.option-pill.selected {
+  border-color: transparent;
+  background: #fff;
+}
+
+.checkmark {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #b9b9b9;
+  border-radius: 5px;
+  font-size: 11px;
+}
+
+.option-pill.selected .checkmark {
+  color: #111;
+  background: #f2f2f2;
+  border-color: #888;
+}
+
+.primary-action {
+  height: 42px;
+  margin-top: 18px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+}
+
+.centered-action {
+  display: block;
+  min-width: 160px;
+  margin: 10px auto 0;
+  border: 1px solid var(--line);
+  background: #fbfaf8;
+  color: #222;
+}
+
+.plan-action {
+  float: right;
+  min-width: 200px;
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  background: #fbfaf8;
+  color: #222;
+}
+
+.primary-action:disabled {
+  opacity: 0.45;
+}
+
+/* Survey plan, progress, and conclusion sections. */
+.plan-card h2,
+.progress-card h2,
+.conclusion-card h2 {
+  margin: 8px 0 16px;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.plan-grid p {
+  margin: 0;
+  color: #666;
+  line-height: 1.55;
+}
+
+.module-list {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding-left: 22px;
+  color: #333;
+}
+
+.progress-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.progress-head strong {
+  font-size: 28px;
+}
+
+.progress-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eee;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #2f2f2f;
+  transition: width 0.25s ease;
+}
+
+.distribution {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.distribution div {
+  padding: 12px;
+  border-radius: 14px;
+  background: #f6f5f3;
+}
+
+.distribution strong,
+.distribution span {
+  display: block;
+}
+
+.distribution span {
+  margin-top: 4px;
+  color: #777;
+  font-size: 13px;
+}
+
+.empty-conclusion {
+  color: #8a8a8a;
+  text-align: center;
+  background: #fbfaf8;
+}
+
+.finding-list {
+  display: grid;
+  gap: 10px;
+}
+
+.finding-list p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.next-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.next-actions span {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f1efeb;
+}
+
+/* Bottom input bar lets the user refine the task after the initial workflow starts. */
+.task-input-bar {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 68px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(38, 33, 28, 0.08);
+  color: #666;
+}
+
+.task-input-bar span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.task-input-bar .ui-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.task-input-bar input {
+  flex: 1;
+  min-width: 120px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #333;
+}
+
+/* Task right panel must allow the nested customer popover to overflow left. */
+.task-right-panel {
+  position: relative;
+  z-index: 30;
+  min-height: calc(100vh - 36px);
+  padding: 24px 18px;
+  overflow: visible;
+  background: #fbfaf8;
+  border-left: 1px solid var(--line);
+  border-radius: 28px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.panel-header p {
+  margin: 7px 0 0;
+  color: #888;
+  font-size: 14px;
+}
+
+.panel-badge {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #666;
+  background: #fff;
+  font-size: 12px;
+}
+
+.task-right-panel .voice-list {
+  overflow: visible;
+  margin-top: 18px;
+  padding-right: 3px;
+}
+
+/* Task customer card: compact answer stream with hover access to the full quick profile. */
+.task-voice-card {
+  position: relative;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+}
+
+.task-voice-card:hover {
+  border-color: #c9d9ce;
+  background: #fffefb;
+  box-shadow: 0 10px 24px rgba(38, 33, 28, 0.08);
+}
+
+.task-voice-card.speaking {
+  border-color: #c9c5bd;
+  background: #fffdf9;
+}
+
+.answer-status {
+  margin-top: 10px;
+  color: #777;
+  font-size: 13px;
+  text-align: right;
+}
+
+/* Small-screen fallback for the prototype. The customer panel hides first to preserve the workflow. */
+@media (max-width: 1180px) {
+  .app-shell {
+    grid-template-columns: 240px 1fr;
+  }
+
+  .right-panel,
+  .task-right-panel {
+    display: none;
+  }
+
+  .task-shell {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .skill-grid,
+  .template-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
