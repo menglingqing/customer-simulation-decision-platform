@@ -907,6 +907,20 @@ img, svg { display: block; max-width: 100%; }
   transform: translateY(-1px);
 }
 
+/* 首页顾客心声卡片也是深访入口 — 整张卡片可点击 */
+.clickable-voice {
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+
+.clickable-voice:hover,
+.clickable-voice:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  outline: 0;
+  transform: translateY(-2px);
+}
+
 .voice-head {
   display: grid;
   grid-template-columns: 40px 1fr;
@@ -2057,6 +2071,858 @@ img, svg { display: block; max-width: 100%; }
 .task-voice-card.speaking {
   animation: voice-pulse 2s ease-in-out infinite;
 }
+
+/* ================================================
+   Interview Page — 深度访谈页 (Scheme A + C)
+   ================================================ */
+
+/* Shell */
+
+.interview-shell {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 52px minmax(680px, 1fr) 360px;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.interview-main {
+  position: relative;
+  height: calc(100vh - 24px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border-light);
+}
+
+/* Interview header */
+
+.interview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.interview-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.large-avatar {
+  display: grid;
+  place-items: center;
+  width: 48px; height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.interview-title h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.interview-title p {
+  margin: 4px 0 0;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.interview-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.interview-tools button {
+  display: grid;
+  place-items: center;
+  width: 36px; height: 36px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.interview-tools button:hover { background: var(--surface-raised); color: var(--text); }
+
+.mode-badge {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Roundtable strip (transition hint between A and C) */
+
+.roundtable-strip {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 28px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--surface-raised);
+}
+
+.roundtable-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 4px 10px 4px 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.roundtable-chip.add {
+  padding: 0 13px;
+  background: var(--surface-raised);
+  cursor: pointer;
+}
+
+.roundtable-chip.add:hover { background: var(--surface-hover); }
+
+.participant-avatar {
+  display: grid;
+  place-items: center;
+  width: 26px; height: 26px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Participant tone colors */
+
+.customer-tone { background: #d1fae5; color: #065f46; }
+.user-tone     { background: #dbeafe; color: #1e40af; }
+.agent-tone    { background: #ede9fe; color: #6d28d9; }
+.group-tone    { background: #fef3c7; color: #92400e; }
+
+/* Interview thread (chat area) */
+
+.interview-thread {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow: auto;
+  padding: 24px 34px 118px;
+}
+
+.date-divider {
+  align-self: center;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Chat message */
+
+.chat-message {
+  display: grid;
+  grid-template-columns: 38px minmax(0, max-content);
+  gap: 12px;
+  align-items: start;
+  max-width: min(740px, 100%);
+}
+
+.chat-message.user-chat {
+  align-self: flex-end;
+  grid-template-columns: minmax(0, max-content) 38px;
+}
+
+.user-chat .chat-avatar { grid-column: 2; grid-row: 1; }
+.user-chat .chat-bubble { grid-column: 1; grid-row: 1; background: var(--accent-soft); }
+
+.chat-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px; height: 36px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.chat-bubble {
+  max-width: 660px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 14px;
+}
+
+.first-voice { font-size: 17px; }
+
+/* Message actions */
+
+.message-actions {
+  display: inline-flex;
+  gap: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.message-actions button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.message-actions button:last-child { border-right: 0; }
+.message-actions button:hover { background: var(--surface-raised); color: var(--text); }
+
+/* Helper cards */
+
+.interview-helper-card,
+.roundtable-prompt,
+.roundtable-summary {
+  align-self: center;
+  width: min(680px, 100%);
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.interview-helper-card strong { color: var(--text); }
+.interview-helper-card p,
+.roundtable-prompt p,
+.roundtable-summary p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.inline-followup {
+  height: 34px;
+  margin-top: 12px;
+  padding: 0 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.inline-followup:hover { background: var(--surface-raised); }
+
+.roundtable-prompt {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.prompt-choice-row {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+.secondary-action {
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.secondary-action:hover { background: var(--surface-raised); }
+
+.compact-action {
+  height: 38px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: var(--text-inverse);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.compact-action:hover { background: var(--accent-hover); }
+
+/* Interview composer (bottom input) */
+
+.interview-composer {
+  position: absolute;
+  left: 28px; right: 28px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  color: var(--text-secondary);
+  font-size: 13px;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.interview-composer:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+}
+
+.interview-composer input {
+  flex: 1;
+  min-width: 120px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.interview-composer input::placeholder { color: var(--text-tertiary); }
+
+.interview-composer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Interview side panel */
+
+.interview-side {
+  height: calc(100vh - 24px);
+  padding: 22px 18px;
+  overflow: auto;
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border-light);
+}
+
+.interview-side-head h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.interview-side-head p {
+  margin: 4px 0 16px;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.interview-customer-card,
+.side-note,
+.participant-row {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.add-participant {
+  width: 100%;
+  height: 40px;
+  margin: 12px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.add-participant:hover { background: var(--surface-raised); }
+
+.side-note { margin-top: 12px; }
+
+.side-note h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.side-note ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.participant-list { display: grid; gap: 10px; }
+
+.participant-row {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 10px;
+  align-items: center;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.participant-row.active {
+  border-color: var(--accent);
+  background: var(--accent-surface);
+}
+
+.participant-row strong,
+.participant-row span { display: block; }
+
+.participant-row span {
+  margin-top: 2px;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+/* ================================================
+   Roundtable Mode — 顾客圆桌 (Scheme C)
+   ================================================ */
+
+.roundtable-shell {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 52px minmax(960px, 1fr);
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.roundtable-board {
+  position: relative;
+  height: calc(100vh - 24px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+}
+
+.roundtable-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.roundtable-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.roundtable-header p {
+  margin: 4px 0 0;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.roundtable-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.roundtable-header-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.roundtable-header-actions button:hover { color: var(--text); }
+
+/* Participant cards row */
+
+.roundtable-members {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(86px, 110px)) 36px;
+  gap: 12px;
+  align-items: start;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--surface-raised);
+}
+
+.member-avatar-card {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-height: 88px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: center;
+  cursor: default;
+}
+
+.member-avatar-card strong,
+.member-avatar-card span { display: block; }
+
+.member-avatar-card strong { font-size: 13px; }
+.member-avatar-card span { color: var(--text-tertiary); font-size: 12px; }
+
+.photo-avatar,
+.outline-avatar,
+.dash-avatar,
+.bot-round-avatar {
+  display: grid;
+  place-items: center;
+  width: 48px; height: 48px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+}
+
+.photo-avatar {
+  background: linear-gradient(135deg, #d1fae5, #fef3c7);
+  color: var(--accent);
+}
+
+.photo-avatar.small { width: 42px; height: 42px; }
+
+.outline-avatar {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-secondary);
+}
+
+.dash-avatar {
+  border: 1px dashed var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.dash-avatar:hover { border-color: var(--accent); color: var(--accent); }
+
+.bot-round-avatar {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.bot-round-avatar .ui-icon,
+.outline-avatar .ui-icon {
+  width: 21px; height: 21px;
+}
+
+.roundtable-next {
+  align-self: center;
+  width: 30px; height: 30px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text-tertiary);
+  font-size: 22px;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.roundtable-next:hover { background: var(--surface-raised); color: var(--text); }
+
+/* Roundtable content: dialogue + speaker archive */
+
+.roundtable-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(560px, 1fr) 280px;
+  min-height: 0;
+}
+
+.roundtable-dialogue {
+  min-height: 0;
+  overflow: auto;
+  padding: 22px 28px 140px;
+  border-right: 1px solid var(--border-light);
+}
+
+.dialogue-title {
+  margin-bottom: 18px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.roundtable-line {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 12px;
+  max-width: 600px;
+  margin: 16px 0;
+}
+
+.roundtable-line.right {
+  grid-template-columns: minmax(0, 1fr) 36px;
+  margin-left: auto;
+}
+
+.line-speaker {
+  margin: 0 0 4px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.line-speaker span {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+.line-bubble {
+  display: inline-block;
+  max-width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.roundtable-line.right .line-bubble {
+  background: var(--accent-soft);
+}
+
+/* Question suggestions */
+
+.question-suggestions {
+  margin-top: 26px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.suggestion-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.suggestion-head strong { font-size: 14px; }
+
+.suggestion-head button {
+  display: grid;
+  place-items: center;
+  width: 28px; height: 28px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+}
+
+.suggestion-head button:hover { background: var(--surface-raised); }
+
+.suggestion-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.suggestion-row button {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.suggestion-row button:hover { background: var(--surface-raised); border-color: var(--border-strong); }
+
+/* Speaker archive (right side of roundtable) */
+
+.speaker-archive {
+  min-height: 0;
+  overflow: auto;
+  padding: 22px 18px 136px;
+  background: var(--surface-raised);
+}
+
+.archive-card {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.archive-card + .archive-card { margin-top: 14px; }
+
+.archive-card h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.archive-card h4 {
+  margin: 12px 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.archive-profile {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.archive-profile strong,
+.archive-profile span { display: block; }
+
+.archive-profile span {
+  margin-top: 2px;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+.mini-meta {
+  display: inline-block;
+  margin: 5px 3px 0 0;
+  padding: 3px 7px;
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font-size: 11px;
+  border: 1px solid var(--border-light);
+}
+
+.archive-card dl { margin: 12px 0 0; }
+
+.archive-card dt {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.archive-card dd {
+  margin: 0 0 4px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.archive-card ul {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Roundtable composer */
+
+.roundtable-composer {
+  position: absolute;
+  left: 24px; right: 24px;
+  bottom: 20px;
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr) 42px;
+  gap: 10px;
+  align-items: center;
+  min-height: 56px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.roundtable-composer:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+}
+
+.composer-tools {
+  display: flex;
+  gap: 6px;
+}
+
+.composer-tools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.composer-tools button:hover { background: var(--surface-raised); }
+
+.roundtable-composer input {
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.roundtable-composer input::placeholder { color: var(--text-tertiary); }
 
 /* ================================================
    Settings Modal — 个性化设置

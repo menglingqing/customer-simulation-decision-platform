@@ -736,6 +736,21 @@ textarea {
   background: #fff;
 }
 
+/* Homepage customer voices are also interview entry points.
+   The whole sentence card is clickable so users do not have to hunt for a small action button. */
+.clickable-voice {
+  cursor: pointer;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.clickable-voice:hover,
+.clickable-voice:focus-visible {
+  border-color: #cbd8cf;
+  box-shadow: 0 14px 28px rgba(38, 33, 28, 0.09);
+  outline: 0;
+  transform: translateY(-1px);
+}
+
 .voice-head {
   display: grid;
   grid-template-columns: 42px 1fr;
@@ -1467,6 +1482,152 @@ textarea {
   font-size: 13px;
 }
 
+/* Expert orchestration panel for the survey task.
+   It makes the multi-agent work visible: research design, user analysis, data analysis, and risk review. */
+.expert-card h2,
+.report-card h2 {
+  margin: 8px 0 0;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.expert-head,
+.report-cover {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: start;
+}
+
+.orchestration-badge {
+  flex: 0 0 auto;
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fbfaf8;
+  color: #555;
+  font-size: 13px;
+}
+
+.expert-flow {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.expert-step {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.expert-step.active {
+  border-color: #c9d9ce;
+  background: #fffefb;
+}
+
+.expert-step.waiting {
+  color: #777;
+  background: #fbfaf8;
+}
+
+.expert-avatar {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #f1efeb;
+  font-weight: 700;
+}
+
+.expert-step.done .expert-avatar {
+  background: #dcefe3;
+  color: #315b42;
+}
+
+.expert-step.active .expert-avatar {
+  background: #dbeafe;
+  color: #214d7b;
+}
+
+.expert-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.expert-row span {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #f1efeb;
+  color: #666;
+  font-size: 12px;
+}
+
+.expert-step p {
+  margin: 5px 0 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+.expert-insight-grid,
+.report-two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.expert-insight-grid section,
+.report-section,
+.executive-summary {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fbfaf8;
+}
+
+.expert-insight-grid h3,
+.report-section h3,
+.executive-summary h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.expert-insight-grid p,
+.report-section p,
+.executive-summary p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.expert-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.expert-actions button {
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: #333;
+}
+
+.expert-actions button:disabled {
+  opacity: 0.45;
+}
+
 .empty-conclusion {
   color: #8a8a8a;
   text-align: center;
@@ -1494,6 +1655,195 @@ textarea {
   padding: 8px 12px;
   border-radius: 999px;
   background: #f1efeb;
+}
+
+/* Consulting-style report card shown after survey responses complete. */
+.report-card {
+  border-color: #d7d2ca;
+  background: #fff;
+}
+
+.report-cover {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.report-cover p {
+  margin: 8px 0 0;
+  color: #666;
+}
+
+.confidence-block {
+  display: grid;
+  place-items: center;
+  flex: 0 0 104px;
+  min-height: 92px;
+  border: 1px solid #d7d2ca;
+  border-radius: 16px;
+  background: #fbfaf8;
+}
+
+.confidence-block span,
+.confidence-block strong {
+  display: block;
+}
+
+.confidence-block span {
+  color: #777;
+  font-size: 13px;
+}
+
+.confidence-block strong {
+  margin-top: 4px;
+  font-size: 30px;
+}
+
+.executive-summary {
+  margin-top: 18px;
+  background: #f8f7f4;
+}
+
+.lead-conclusion {
+  font-size: 17px;
+  font-weight: 700;
+  color: #222 !important;
+}
+
+.executive-summary ol {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding-left: 20px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.report-section {
+  margin-top: 16px;
+  background: #fff;
+}
+
+.report-two-col .report-section {
+  margin-top: 0;
+}
+
+.segment-bars {
+  display: grid;
+  gap: 12px;
+}
+
+.segment-bars div {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+
+.segment-bars i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 6px;
+  border-radius: 999px;
+  background: #2f2f2f;
+}
+
+.segment-bars div::after {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  z-index: -1;
+  border-radius: 999px;
+  background: #eee;
+  content: "";
+}
+
+.decision-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.decision-matrix th,
+.decision-matrix td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.decision-matrix th {
+  background: #f6f5f3;
+  color: #555;
+}
+
+.decision-matrix tr:last-child td {
+  border-bottom: 0;
+}
+
+.recommendation-section {
+  background: #fbfaf8;
+}
+
+.evidence-panel {
+  overflow: auto;
+}
+
+.completed-insight-panel {
+  overflow: visible;
+}
+
+.completed-voice-list {
+  overflow: visible;
+  margin-top: 18px;
+  padding-right: 3px;
+}
+
+.completed-insight-panel .task-voice-card {
+  padding: 12px;
+}
+
+.completed-insight-panel .task-voice-card .quote {
+  margin-bottom: 4px;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.evidence-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.evidence-card span {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #f1efeb;
+  color: #666;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.evidence-card h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.evidence-card p {
+  margin: 0;
+  color: #555;
+  line-height: 1.55;
 }
 
 /* Bottom input bar lets the user refine the task after the initial workflow starts. */
@@ -1608,6 +1958,790 @@ textarea {
   text-align: right;
 }
 
+/* Deep interview page: scheme A starts as a focused one-to-one conversation.
+   After follow-up, scheme C turns the same surface into a small roundtable discussion. */
+.interview-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 64px minmax(680px, 1fr) 360px;
+  gap: 18px;
+  padding: 18px;
+}
+
+.interview-main {
+  position: relative;
+  min-height: calc(100vh - 36px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 28px;
+}
+
+.interview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.interview-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.large-avatar,
+.chat-avatar,
+.participant-avatar {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.large-avatar {
+  width: 48px;
+  height: 48px;
+  background: #dcefe3;
+  color: #315b42;
+  font-size: 20px;
+}
+
+.interview-title h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.interview-title p {
+  margin: 5px 0 0;
+  color: #777;
+}
+
+.interview-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.interview-tools button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #666;
+}
+
+.interview-tools button:hover {
+  background: #f1f0ee;
+}
+
+.mode-badge {
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #666;
+  background: #fff;
+  font-size: 13px;
+}
+
+.roundtable-strip {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--line);
+  background: #fbfaf8;
+}
+
+.roundtable-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 4px 10px 4px 5px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: #444;
+}
+
+.roundtable-chip.add {
+  padding: 0 13px;
+  background: #f6f5f3;
+}
+
+.participant-avatar {
+  width: 28px;
+  height: 28px;
+  font-size: 13px;
+}
+
+.customer-tone {
+  background: #dcefe3;
+  color: #315b42;
+}
+
+.user-tone {
+  background: #dbeafe;
+  color: #214d7b;
+}
+
+.agent-tone {
+  background: #efe8ff;
+  color: #5f3d9a;
+}
+
+.group-tone {
+  background: #f8ead4;
+  color: #815421;
+}
+
+.interview-thread {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow: auto;
+  padding: 24px 34px 118px;
+}
+
+.date-divider {
+  align-self: center;
+  color: #9a9a9a;
+  font-size: 13px;
+}
+
+.chat-message {
+  display: grid;
+  grid-template-columns: 42px minmax(0, max-content);
+  gap: 12px;
+  align-items: start;
+  max-width: min(760px, 100%);
+}
+
+.user-chat {
+  align-self: flex-end;
+  grid-template-columns: minmax(0, max-content) 42px;
+}
+
+.user-chat .chat-avatar {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.user-chat .chat-bubble {
+  grid-column: 1;
+  grid-row: 1;
+  background: #dbeafe;
+}
+
+.chat-avatar {
+  width: 38px;
+  height: 38px;
+}
+
+.chat-bubble {
+  max-width: 680px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f3f2f0;
+  color: #222;
+  line-height: 1.65;
+}
+
+.first-voice {
+  font-size: 17px;
+}
+
+.message-actions {
+  display: inline-flex;
+  gap: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fff;
+}
+
+.message-actions button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: #fff;
+  color: #777;
+  font-size: 12px;
+}
+
+.message-actions button:last-child {
+  border-right: 0;
+}
+
+.interview-helper-card,
+.roundtable-prompt,
+.roundtable-summary {
+  align-self: center;
+  width: min(680px, 100%);
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fbfaf8;
+}
+
+.interview-helper-card p,
+.roundtable-prompt p,
+.roundtable-summary p {
+  margin: 6px 0 0;
+  color: #666;
+  line-height: 1.55;
+}
+
+.inline-followup {
+  height: 34px;
+  margin-top: 12px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: #333;
+}
+
+.inline-followup:hover {
+  background: #f1f0ee;
+}
+
+.roundtable-prompt {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.prompt-choice-row {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+.secondary-action,
+.compact-action {
+  height: 38px;
+  margin: 0;
+  padding: 0 14px;
+  border-radius: 999px;
+}
+
+.secondary-action {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: #555;
+}
+
+.compact-action {
+  border: 0;
+  background: #111;
+  color: #fff;
+}
+
+.interview-composer {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(38, 33, 28, 0.08);
+  color: #666;
+}
+
+.interview-composer input {
+  flex: 1;
+  min-width: 120px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #333;
+  font-size: 15px;
+}
+
+.interview-composer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.interview-side {
+  min-height: calc(100vh - 36px);
+  padding: 24px 18px;
+  overflow: auto;
+  background: #fbfaf8;
+  border-left: 1px solid var(--line);
+  border-radius: 28px;
+}
+
+.interview-side-head h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.interview-side-head p {
+  margin: 7px 0 18px;
+  color: #888;
+  font-size: 14px;
+}
+
+.interview-customer-card,
+.side-note,
+.participant-row {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.add-participant {
+  width: 100%;
+  height: 42px;
+  margin: 12px 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: #333;
+}
+
+.side-note {
+  margin-top: 12px;
+}
+
+.side-note h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.side-note ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
+  color: #555;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.participant-list {
+  display: grid;
+  gap: 10px;
+}
+
+.participant-row {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.participant-row.active {
+  border-color: #bfd8c8;
+  background: #fffefb;
+}
+
+.participant-row strong,
+.participant-row span {
+  display: block;
+}
+
+.participant-row span {
+  margin-top: 3px;
+  color: #777;
+  font-size: 12px;
+}
+
+/* Scheme C: customer roundtable mode.
+   This layout follows the selected wireframe: participant row, roundtable transcript, and in-board insight panel. */
+.roundtable-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 64px minmax(980px, 1fr);
+  gap: 18px;
+  padding: 18px;
+}
+
+.roundtable-board {
+  position: relative;
+  min-height: calc(100vh - 36px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.roundtable-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 18px;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.roundtable-header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.roundtable-header p {
+  margin: 6px 0 0;
+  color: #777;
+  font-size: 13px;
+}
+
+.roundtable-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.roundtable-header-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  border: 0;
+  background: transparent;
+  color: #555;
+}
+
+.roundtable-members {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(86px, 112px)) 36px;
+  gap: 14px;
+  align-items: start;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--line);
+  background: #fbfaf8;
+}
+
+.member-avatar-card {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-height: 88px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #222;
+  text-align: center;
+}
+
+.member-avatar-card strong,
+.member-avatar-card span {
+  display: block;
+}
+
+.member-avatar-card strong {
+  font-size: 13px;
+}
+
+.member-avatar-card span {
+  color: #777;
+  font-size: 12px;
+}
+
+.photo-avatar,
+.outline-avatar,
+.dash-avatar,
+.bot-round-avatar {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.photo-avatar {
+  background: linear-gradient(135deg, #dcefe3, #f3eadc);
+  color: #315b42;
+}
+
+.photo-avatar.small {
+  width: 42px;
+  height: 42px;
+}
+
+.outline-avatar {
+  border: 1px solid #cfcac3;
+  background: #fff;
+  color: #555;
+}
+
+.dash-avatar {
+  border: 1px dashed #bdb7af;
+  background: #fff;
+  color: #333;
+}
+
+.bot-round-avatar {
+  background: #f1eff7;
+  color: #5f3d9a;
+}
+
+.bot-round-avatar .ui-icon,
+.outline-avatar .ui-icon {
+  width: 21px;
+  height: 21px;
+}
+
+.roundtable-next {
+  align-self: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #555;
+  font-size: 24px;
+}
+
+.roundtable-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(560px, 1fr) 292px;
+  min-height: 0;
+}
+
+.roundtable-dialogue {
+  min-height: 0;
+  overflow: auto;
+  padding: 22px 28px 142px;
+  border-right: 1px solid var(--line);
+}
+
+.dialogue-title {
+  margin-bottom: 18px;
+  color: #555;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.roundtable-line {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
+  max-width: 620px;
+  margin: 16px 0;
+}
+
+.roundtable-line.right {
+  grid-template-columns: minmax(0, 1fr) 38px;
+  margin-left: auto;
+}
+
+.line-speaker {
+  margin: 0 0 5px;
+  color: #333;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.line-speaker span {
+  color: #777;
+  font-weight: 400;
+}
+
+.line-bubble {
+  display: inline-block;
+  max-width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f7f6f4;
+  line-height: 1.6;
+}
+
+.roundtable-line.right .line-bubble {
+  background: #dbeafe;
+}
+
+.question-suggestions {
+  margin-top: 26px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.suggestion-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.suggestion-head button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.suggestion-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.suggestion-row button {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: #444;
+}
+
+.speaker-archive {
+  min-height: 0;
+  overflow: auto;
+  padding: 22px 18px 136px;
+  background: #fbfaf8;
+}
+
+.archive-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+}
+
+.archive-card + .archive-card {
+  margin-top: 14px;
+}
+
+.archive-card h3 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.archive-card h4 {
+  margin: 12px 0 6px;
+  font-size: 13px;
+}
+
+.archive-profile {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.archive-profile strong,
+.archive-profile span {
+  display: block;
+}
+
+.archive-profile span {
+  margin-top: 2px;
+  color: #777;
+  font-size: 12px;
+}
+
+.mini-meta {
+  display: inline-block;
+  margin: 6px 4px 0 0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #f1efeb;
+  color: #666;
+  font-size: 11px;
+}
+
+.archive-card dl {
+  margin: 12px 0 0;
+}
+
+.archive-card dt {
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.archive-card dd {
+  margin: 0 0 4px;
+  color: #555;
+  font-size: 13px;
+}
+
+.archive-card ul {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding-left: 18px;
+  color: #555;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.roundtable-composer {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 20px;
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr) 44px;
+  gap: 10px;
+  align-items: center;
+  min-height: 62px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 26px rgba(38, 33, 28, 0.08);
+}
+
+.composer-tools {
+  display: flex;
+  gap: 6px;
+}
+
+.composer-tools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 34px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fff;
+  color: #555;
+}
+
+.roundtable-composer input {
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #333;
+}
+
 /* Small-screen fallback for the prototype. The customer panel hides first to preserve the workflow. */
 @media (max-width: 1180px) {
   .app-shell {
@@ -1615,12 +2749,23 @@ textarea {
   }
 
   .right-panel,
-  .task-right-panel {
+  .task-right-panel,
+  .interview-side {
     display: none;
   }
 
-  .task-shell {
+  .task-shell,
+  .interview-shell,
+  .roundtable-shell {
     grid-template-columns: 64px 1fr;
+  }
+
+  .roundtable-content {
+    grid-template-columns: 1fr;
+  }
+
+  .speaker-archive {
+    display: none;
   }
 
   .skill-grid,

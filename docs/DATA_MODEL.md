@@ -323,6 +323,108 @@ status 可选：
 * nextActions
 * generatedAt
 
+## InterviewContext 深度访谈上下文
+
+InterviewContext 由首页右侧顾客心声点击创建，用于进入深度访谈页。
+
+字段建议：
+
+* id
+* source：例如 home_customer_voice
+* sourceTaskId
+* customerId
+* firstMessage
+* maskedName
+* age
+* channelOrStore
+* membershipLevel
+* purchasedItems
+* personaSummary
+* mode
+* createdAt
+
+mode 可选：
+
+* single：方案 A，一对一深访
+* roundtable：方案 C，顾客圆桌模式
+
+当前前端原型中的映射：
+
+* 首页顾客心声 quote → firstMessage
+* 首页顾客脱敏信息 → maskedName / age / channelOrStore / membershipLevel
+* 右侧顾客快速档案数据 → purchasedItems / personaSummary
+* `interviewState.mode` → mode
+
+## InterviewMessage 深度访谈消息
+
+InterviewMessage 表示深度访谈或圆桌模式中的一条发言。
+
+字段建议：
+
+* id
+* interviewId
+* speakerType
+* speakerId
+* speakerName
+* speakerRole
+* content
+* side
+* createdAt
+
+speakerType 可选：
+
+* simulated_customer
+* user
+* human_participant
+* agent
+* customer_group
+
+side 可选：
+
+* left
+* right
+
+说明：
+
+方案 A 中主要包含仿真顾客和用户发言；方案 C 中会增加真人参与者、专家 Agent 和顾客群体发言。
+
+## RoundtableSession 顾客圆桌会话
+
+RoundtableSession 是深度访谈升级后的协作会话。
+
+字段建议：
+
+* id
+* interviewId
+* title
+* participants
+* activeSpeakerId
+* dialogueMessages
+* currentSpeakerProfile
+* draftConclusion
+* createdAt
+* updatedAt
+
+participants 字段建议：
+
+* id
+* type
+* displayName
+* role
+* avatar
+
+draftConclusion 字段建议：
+
+* concernPoints
+* acceptanceConditions
+* riskSignals
+* nextActions
+
+使用原则：
+
+* 圆桌模式不是普通群聊，而是面向企业决策证据的协作访谈。
+* 当前发言者档案与访谈结论草稿属于圆桌右侧工作区，不应塞回普通消息气泡。
+
 ## TaskUiState 任务界面状态
 
 TaskUiState 只描述前端展示状态，不属于核心业务结论。

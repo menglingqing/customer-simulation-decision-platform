@@ -180,6 +180,14 @@ const uiState = {
   personalizationOpen: false,
 };
 
+// 深度访谈页的前端运行状态。
+// mode=single：方案 A，一对一深访。mode=roundtable：方案 C，顾客圆桌模式。
+const interviewState = {
+  mode: "single",
+  followups: [],
+  showRoundtablePrompt: false,
+};
+
 function loadTaskContext() {
   try {
     const raw = localStorage.getItem("customer-sim-current-task");
@@ -370,7 +378,7 @@ function personalizationModal() {
 
 function voiceCard(item, index) {
   return `
-    <article class="voice-card">
+    <article class="voice-card clickable-voice" role="button" tabindex="0" onclick="openInterview(${index})" onkeydown="handleVoiceKey(event, ${index})" title="进入与${escapeHtml(item.name)}的深度访谈">
       <div class="voice-head">
         <div class="avatar v${index}">${item.name.charAt(0)}</div>
         <div>
@@ -726,7 +734,407 @@ function taskPage() {
 }
 
 /* ================================================
-   3. Skills Page — 探索技能
+   3. Interview Page — 深度访谈页 (Scheme A + C)
+   ================================================ */
+
+// 从首页右侧顾客心声进入深访。保持与首页数据同源。
+function openInterview(index) {
+  const customer = customerVoices[index] || customerVoices[0];
+  const profile = taskCustomers.find(item => item.name === customer.name) || taskCustomers[0];
+  const context = {
+    ...profile, ...customer,
+    firstMessage: customer.quote,
+    source: "home-customer-voice",
+    startedAt: new Date().toISOString(),
+  };
+  interviewState.mode = "single";
+  interviewState.followups = [];
+  interviewState.showRoundtablePrompt = false;
+  localStorage.setItem("customer-sim-current-interview", JSON.stringify(context));
+  location.hash = "interview";
+}
+
+function handleVoiceKey(event, index) {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  openInterview(index);
+}
+
+function loadInterviewContext() {
+  try {
+    const raw = localStorage.getItem("customer-sim-current-interview");
+    if (raw) return JSON.parse(raw);
+  } catch { /* fallback */ }
+  const customer = customerVoices[0];
+  const profile = taskCustomers.find(item => item.name === customer.name) || taskCustomers[0];
+  return { ...profile, ...customer, firstMessage: customer.quote, source: "fallback" };
+}
+
+function interviewProfileFor(customer) {
+  const purchases = customer.purchases?.length
+    ? customer.purchases
+    : ["2026-02-14 会员年卡续费 <相关度0.91>", "2026-01-06 季度权益包 <相关度0.48>"];
+  const persona = customer.persona?.length
+    ? customer.persona
+    : ["消费观：先看价值，再看优惠", "决策观：熟人推荐，试用再定", "核心偏好：清晰权益、低风险入口", "决策红线：涨价但权益无感"];
+  return { purchases, persona };
+}
+
+function participantAvatar(label, tone = "") {
+  return `<span class="participant-avatar ${tone}">${escapeHtml(label)}</span>`;
+}
+
+function interviewSidePanel(customer) {
+  const { purchases, persona } = interviewProfileFor(customer);
+  if (interviewState.mode === "roundtable") {
+    return `
+      <aside class="interview-side">
+        <div class="interview-side-head">
+          <h2>圆桌模式</h2>
+          <p>顾客、业务成员和 Agent 共创追问</p>
+        </div>
+        <div class="participant-list">
+          ${roundtableParticipants(customer).map((item, i) => `
+            <article class="participant-row ${i === 0 ? "active" : ""}">
+              ${participantAvatar(item.avatar, item.tone)}
+              <div><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.role)}</span></div>
+            </article>
+          `).join("")}
+        </div>
+        <section class="side-note">
+          <h3>当前讨论焦点</h3>
+          <p>把"涨价能不能接受"拆成权益感知、沟通理由和低风险试用入口三条线。</p>
+        </section>
+      </aside>
+    `;
+  }
+  return `
+    <aside class="interview-side">
+      <div class="interview-side-head">
+        <h2>访谈对象</h2>
+        <p>本次一对一深度访谈</p>
+      </div>
+      <section class="interview-customer-card">
+        <div class="voice-head">
+          <div class="avatar">${escapeHtml(customer.name.charAt(0))}</div>
+          <div>
+            <div class="voice-name">${escapeHtml(customer.name)}</div>
+            <div class="voice-age">${escapeHtml(customer.age)}</div>
+            <div class="meta-row">${customer.meta.map(m => `<span class="meta-pill">${escapeHtml(m)}</span>`).join("")}</div>
+          </div>
+        </div>
+      </section>
+      <button class="add-participant" type="button" onclick="enterRoundtable()">+ 添加真人或仿真顾客</button>
+      <section class="side-note">
+        <h3>已购商品</h3>
+        <ul>${purchases.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+      </section>
+      <section class="side-note">
+        <h3>仿真顾客人设</h3>
+        <ul>${persona.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+      </section>
+    </aside>
+  `;
+}
+
+function roundtableParticipants(customer) {
+  return [
+    { avatar: customer.name.charAt(0), name: customer.name, role: "仿真顾客 · 首位发言", tone: "customer-tone" },
+    { avatar: "令", name: "孟令卿", role: "企业决策者", tone: "user-tone" },
+    { avatar: "研", name: "调研 Agent", role: "追问与归纳", tone: "agent-tone" },
+    { avatar: "客", name: "高价值会员组", role: "补充群体视角", tone: "group-tone" },
+  ];
+}
+
+function roundtableStrip(customer) {
+  if (interviewState.mode !== "roundtable") return "";
+  return `
+    <div class="roundtable-strip">
+      ${roundtableParticipants(customer).map(item => `
+        <div class="roundtable-chip">
+          ${participantAvatar(item.avatar, item.tone)}
+          <span>${escapeHtml(item.name)}</span>
+        </div>
+      `).join("")}
+      <button class="roundtable-chip add" type="button" onclick="enterRoundtable()">+ 添加</button>
+    </div>
+  `;
+}
+
+function interviewFollowupHtml(customer) {
+  if (!interviewState.followups.length) {
+    return `
+      <div class="interview-helper-card">
+        <strong>可以继续追问</strong>
+        <p>例如：你愿意接受什么样的权益补偿？什么情况会让你直接放弃？</p>
+        <button class="inline-followup" type="button" onclick="quickInterviewFollowup()">追问这位顾客</button>
+      </div>
+    `;
+  }
+  const latest = interviewState.followups[interviewState.followups.length - 1];
+  return `
+    <article class="chat-message user-chat">
+      <div class="chat-avatar user-tone">令</div>
+      <div class="chat-bubble">${escapeHtml(latest.question)}</div>
+    </article>
+    <article class="chat-message customer-chat">
+      <div class="chat-avatar customer-tone">${escapeHtml(customer.name.charAt(0))}</div>
+      <div>
+        <div class="chat-bubble">${escapeHtml(latest.answer)}</div>
+        <div class="message-actions">
+          <button type="button">有帮助</button>
+          <button type="button" onclick="quickInterviewFollowup('如果要让你接受涨价，最打动你的权益是什么？')">继续追问</button>
+          <button type="button">引用到报告</button>
+        </div>
+      </div>
+    </article>
+    ${interviewState.showRoundtablePrompt ? roundtablePrompt() : ""}
+  `;
+}
+
+function roundtablePrompt() {
+  return `
+    <section class="roundtable-prompt">
+      <div>
+        <strong>这个问题可能需要更多视角。</strong>
+        <p>是否进入圆桌模式，让业务成员、调研 Agent 和更多仿真顾客一起讨论？</p>
+      </div>
+      <div class="prompt-choice-row">
+        <button class="secondary-action" type="button" onclick="dismissRoundtablePrompt()">否，继续一对一</button>
+        <button class="compact-action" type="button" onclick="enterRoundtable()">是，进入圆桌模式</button>
+      </div>
+    </section>
+  `;
+}
+
+function roundtableMessages(customer) {
+  if (interviewState.mode !== "roundtable") return "";
+  return `
+    <div class="date-divider">圆桌讨论已开启</div>
+    <article class="chat-message agent-chat">
+      <div class="chat-avatar agent-tone">研</div>
+      <div class="chat-bubble">我会把问题拆成三条：权益是否可感知、涨价理由是否可信、是否需要低风险试用入口。</div>
+    </article>
+    <article class="chat-message customer-chat">
+      <div class="chat-avatar group-tone">客</div>
+      <div class="chat-bubble">高价值会员组更愿意接受涨价，但前提是权益必须高频、稳定、能直接用上。</div>
+    </article>
+    <article class="chat-message customer-chat">
+      <div class="chat-avatar customer-tone">${escapeHtml(customer.name.charAt(0))}</div>
+      <div class="chat-bubble">对我来说，最关键不是贵 100 元，而是这 100 元到底换来了什么，最好能先体验一次。</div>
+    </article>
+    <section class="roundtable-summary">
+      <strong>圆桌阶段小结</strong>
+      <p>建议把"涨价"改写为"权益升级"，同时提供限时体验或老会员缓冲方案。</p>
+    </section>
+  `;
+}
+
+// 方案 C：顾客圆桌模式。独立工作台，区别于方案 A 的一对一聊天。
+function roundtableModePage(customer) {
+  const firstMessage = escapeHtml(customer.firstMessage || customer.quote);
+  const name = escapeHtml(customer.name);
+  const age = escapeHtml(customer.age);
+  const meta = customer.meta.map(m => `<span class="mini-meta">${escapeHtml(m)}</span>`).join("");
+  const latestQ = escapeHtml(interviewState.followups[interviewState.followups.length - 1]?.question || "如果会员年费从 199 元涨到 299 元，你最担心的是什么？");
+  const latestA = escapeHtml(interviewState.followups[interviewState.followups.length - 1]?.answer || "我不是完全不能接受，但需要知道多出来的钱换来了什么。");
+
+  return `
+    <div class="roundtable-shell">
+      <aside class="task-rail">
+        <div class="task-logo">${icon("logo", "brand-icon")}</div>
+        ${taskRailIcon("顾客", "customer", true)}
+        ${taskRailIcon("添加", "plus")}
+        ${taskRailIcon("技能", "spark")}
+        ${taskRailIcon("资源", "resource")}
+        ${taskRailIcon("知识", "knowledge")}
+        ${taskRailIcon("项目", "project")}
+        ${taskRailIcon("历史", "history")}
+        <div class="task-rail-spacer"></div>
+        ${taskRailIcon("设置", "settings")}
+      </aside>
+      <main class="roundtable-board">
+        <header class="roundtable-header">
+          <div>
+            <h1>深度访谈 · 会员年费涨价评估</h1>
+            <p>源自首页心声 · ${name}</p>
+          </div>
+          <div class="roundtable-header-actions">
+            <button type="button">${icon("survey")}记录</button>
+            <button type="button">${icon("knowledge")}白板</button>
+            <button type="button">${icon("settings")}更多</button>
+          </div>
+        </header>
+        <section class="roundtable-members" aria-label="圆桌参与者">
+          <article class="member-avatar-card active">
+            <div class="photo-avatar">${escapeHtml(customer.name.charAt(0))}</div>
+            <strong>${name}</strong><span>仿真顾客</span>
+          </article>
+          <article class="member-avatar-card">
+            <div class="outline-avatar">${icon("user")}</div>
+            <strong>你</strong><span>研究员</span>
+          </article>
+          <button class="member-avatar-card ghost" type="button">
+            <div class="dash-avatar">+</div>
+            <strong>添加真人</strong><span>团队成员</span>
+          </button>
+          <button class="member-avatar-card ghost" type="button">
+            <div class="dash-avatar">+</div>
+            <strong>添加仿真顾客</strong><span>补充视角</span>
+          </button>
+          <article class="member-avatar-card">
+            <div class="bot-round-avatar">${icon("bot")}</div>
+            <strong>专家 Agent</strong><span>追问归纳</span>
+          </article>
+          <button class="roundtable-next" type="button">›</button>
+        </section>
+        <section class="roundtable-content">
+          <div class="roundtable-dialogue">
+            <div class="dialogue-title">访谈记录（圆桌对话）</div>
+            <div class="date-divider">今天 15:21</div>
+            ${roundtableLine({ avatar: customer.name.charAt(0), tone: "customer-tone", name, role: "仿真顾客", text: firstMessage })}
+            ${roundtableLine({ avatar: "你", tone: "user-tone", name: "你", role: "研究员", text: latestQ, side: "right" })}
+            ${roundtableLine({ avatar: customer.name.charAt(0), tone: "customer-tone", name, role: "仿真顾客", text: latestA })}
+            ${roundtableLine({ avatar: "市", tone: "user-tone", name: "市场同事", role: "真人", text: "我们目前提供的权益里，哪些对你最有吸引力？" })}
+            ${roundtableLine({ avatar: customer.name.charAt(0), tone: "customer-tone", name, role: "仿真顾客", text: "常用服务和专属折扣最吸引我，其次是退换货更方便。" })}
+            <section class="question-suggestions">
+              <div class="suggestion-head"><strong>追问建议</strong><button type="button">${icon("history")}</button></div>
+              <div class="suggestion-row">
+                <button type="button" onclick="quickInterviewFollowup('你能接受的价格红线是多少？')">追问价格红线</button>
+                <button type="button" onclick="quickInterviewFollowup('你更偏好哪一种权益组合？')">追问权益偏好</button>
+                <button type="button" onclick="quickInterviewFollowup('哪些信息会降低你的顾虑？')">追问顾虑感知</button>
+              </div>
+            </section>
+          </div>
+          <aside class="speaker-archive">
+            <section class="archive-card speaker-card">
+              <h3>当前发言者档案</h3>
+              <div class="archive-profile">
+                <div class="photo-avatar small">${escapeHtml(customer.name.charAt(0))}</div>
+                <div><strong>${name}</strong><span>${age}</span><div class="meta-row">${meta}</div></div>
+              </div>
+              <dl>
+                <dt>关键画像</dt>
+                <dd>消费观：实用耐穿</dd><dd>决策观：熟人推荐</dd>
+                <dd>购买倾向：考虑型</dd><dd>决策红线：花哨 / 无感</dd>
+              </dl>
+            </section>
+            <section class="archive-card">
+              <h3>访谈结论草稿</h3>
+              <h4>顾虑要点</h4>
+              <ul><li>担心涨价后权益不匹配</li><li>体验变差 / 促销复杂</li></ul>
+              <h4>接受条件</h4>
+              <ul><li>常用服务、专属折扣</li><li>退换货更方便</li></ul>
+              <h4>风险信号</h4>
+              <ul><li>价格敏感但可接受</li><li>体验是关键决策因素</li></ul>
+              <h4>下一步行动</h4>
+              <ul><li>验证价格心理预期</li><li>测试权益优先级排序</li></ul>
+            </section>
+          </aside>
+        </section>
+        <form class="roundtable-composer" onsubmit="sendInterviewFollowup(event)">
+          <div class="composer-tools">
+            <button type="button">${icon("plus")}</button>
+            <button type="button">${icon("resource")}资源</button>
+            <button type="button">${icon("knowledge")}知识</button>
+            <button type="button">${icon("group")}添加参与者</button>
+          </div>
+          <input id="interviewInput" placeholder="输入追问内容..." autocomplete="off" />
+          <button class="submit-btn" type="submit">${icon("arrowUp")}</button>
+        </form>
+      </main>
+    </div>
+  `;
+}
+
+function roundtableLine({ avatar, tone, name, role, text, side = "left" }) {
+  return `
+    <article class="roundtable-line ${side === "right" ? "right" : ""}">
+      ${side === "right" ? "" : `<div class="chat-avatar ${tone}">${escapeHtml(avatar)}</div>`}
+      <div>
+        <div class="line-speaker">${escapeHtml(name)} <span>${escapeHtml(role)}</span></div>
+        <div class="line-bubble">${escapeHtml(text)}</div>
+      </div>
+      ${side === "right" ? `<div class="chat-avatar ${tone}">${escapeHtml(avatar)}</div>` : ""}
+    </article>
+  `;
+}
+
+function interviewPage() {
+  const customer = loadInterviewContext();
+  if (interviewState.mode === "roundtable") return roundtableModePage(customer);
+
+  const firstMessage = escapeHtml(customer.firstMessage || customer.quote);
+  const name = escapeHtml(customer.name);
+  const age = escapeHtml(customer.age);
+  const meta = customer.meta.map(m => escapeHtml(m)).join(" · ");
+  const modeLabel = "一对一深访";
+
+  return `
+    <div class="interview-shell">
+      <aside class="task-rail">
+        <div class="task-logo">${icon("logo", "brand-icon")}</div>
+        ${taskRailIcon("顾客搭档", "customer", true)}
+        ${taskRailIcon("新建", "plus")}
+        ${taskRailIcon("探索技能", "spark")}
+        ${taskRailIcon("搜索", "search")}
+        ${taskRailIcon("资源库", "resource")}
+        ${taskRailIcon("知识库", "knowledge")}
+        ${taskRailIcon("项目库", "project")}
+        ${taskRailIcon("历史记录", "history")}
+        <div class="task-rail-spacer"></div>
+        ${taskRailIcon("我的", "user")}
+        ${taskRailIcon("通知", "bell")}
+        ${taskRailIcon("设置", "settings")}
+      </aside>
+      <main class="interview-main">
+        <header class="interview-header">
+          <div class="interview-title">
+            <div class="large-avatar">${escapeHtml(customer.name.charAt(0))}</div>
+            <div>
+              <h1>${name}</h1>
+              <p>${age} · ${meta}</p>
+            </div>
+          </div>
+          <div class="interview-tools">
+            <span class="mode-badge">${modeLabel}</span>
+            <button type="button" title="搜索">${icon("search")}</button>
+            <button type="button" title="添加参与者进入圆桌模式" onclick="enterRoundtable()">${icon("plus")}</button>
+            <button type="button" title="更多">${icon("settings")}</button>
+          </div>
+        </header>
+        ${roundtableStrip(customer)}
+        <section class="interview-thread">
+          <div class="date-divider">今天 15:21</div>
+          <article class="chat-message customer-chat">
+            <div class="chat-avatar customer-tone">${escapeHtml(customer.name.charAt(0))}</div>
+            <div>
+              <div class="chat-bubble first-voice">${firstMessage}</div>
+              <div class="message-actions">
+                <button type="button" onclick="quickInterviewFollowup()">追问原因</button>
+                <button type="button">引用到任务</button>
+                <button type="button" onclick="enterRoundtable()">邀请圆桌</button>
+              </div>
+            </div>
+          </article>
+          ${interviewFollowupHtml(customer)}
+          ${roundtableMessages(customer)}
+        </section>
+        <form class="interview-composer" onsubmit="sendInterviewFollowup(event)">
+          <span>${icon("plus")}</span>
+          <input id="interviewInput" placeholder="继续追问${name}..." autocomplete="off" />
+          <span>${icon("resource")}资源</span>
+          <span>${icon("knowledge")}知识</span>
+          <button class="submit-btn" type="submit">${icon("arrowUp")}</button>
+        </form>
+      </main>
+      ${interviewSidePanel(customer)}
+    </div>
+  `;
+}
+
+/* ================================================
+   4. Skills Page — 探索技能
    ================================================ */
 
 function railIcon(label, iconName, active) {
@@ -822,6 +1230,39 @@ function closePersonalization() {
   render();
 }
 
+// ---- Interview actions ----
+
+function sendInterviewFollowup(event) {
+  event.preventDefault();
+  const input = document.getElementById("interviewInput");
+  const question = input?.value.trim() || "如果会员年费从 199 元涨到 299 元，你最担心的是什么？";
+  addInterviewFollowup(question);
+}
+
+function quickInterviewFollowup(question = "你为什么会这样想？能具体说说你的判断标准吗？") {
+  addInterviewFollowup(question);
+}
+
+function addInterviewFollowup(question) {
+  const answer = "我不是完全不能接受，但需要知道多出来的钱换来了什么。如果只是价格变高，我会犹豫；如果有稳定、常用、能马上感知到的权益，我会愿意继续了解。";
+  interviewState.followups.push({ question, answer });
+  interviewState.showRoundtablePrompt = interviewState.mode !== "roundtable";
+  const input = document.getElementById("interviewInput");
+  if (input) input.value = "";
+  render();
+}
+
+function dismissRoundtablePrompt() {
+  interviewState.showRoundtablePrompt = false;
+  render();
+}
+
+function enterRoundtable() {
+  interviewState.mode = "roundtable";
+  interviewState.showRoundtablePrompt = false;
+  render();
+}
+
 function generatePlan() {
   taskState.stage = "plan";
   taskState.collapsed.plan = false;
@@ -866,6 +1307,7 @@ function render() {
 
   if (route === "skills") app.innerHTML = skillsPage();
   else if (route === "task") app.innerHTML = taskPage();
+  else if (route === "interview") app.innerHTML = interviewPage();
   else app.innerHTML = homePage();
 
   bindHomePrompt();
