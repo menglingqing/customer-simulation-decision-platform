@@ -1206,15 +1206,48 @@ function taskVoiceCard(item, index) {
   `;
 }
 
+// 调研问卷用户旅程条。
+// 这条轨道解决“用户不知道现在走到哪一步”的问题，把任务从输入到报告拆成可感知阶段。
+function surveyJourney(complete) {
+  const stageOrder = ["clarify", "plan", "collecting", "report"];
+  const activeStage = complete ? "report" : taskState.stage === "collecting" ? "collecting" : taskState.stage === "plan" ? "plan" : "clarify";
+  const activeIndex = stageOrder.indexOf(activeStage);
+  const steps = [
+    ["clarify", "确认问题", "锁定顾客与风险"],
+    ["plan", "设计调研", "生成问卷方案"],
+    ["collecting", "顾客回答", "收集多视角反馈"],
+    ["report", "输出报告", "形成商业建议"],
+  ];
+
+  return `
+    <section class="survey-journey" aria-label="调研问卷用户旅程">
+      ${steps
+        .map(
+          ([key, title, desc], index) => `
+            <div class="journey-step ${index < activeIndex ? "done" : ""} ${index === activeIndex ? "active" : ""}">
+              <span>${index + 1}</span>
+              <div>
+                <strong>${title}</strong>
+                <p>${desc}</p>
+              </div>
+            </div>
+          `,
+        )
+        .join("")}
+    </section>
+  `;
+}
+
 // 调研问卷增强 1：专家编排面板。
 // 用于回应“数据分析专家、用户分析专家需要忙活”的产品要求，让用户看到多 Agent 分工、
 // 数据源读取、分析口径和阶段性产出，而不是只看到一个黑盒回答。
+// 注意：这里不展示“为什么需要这些 Agent / 能力评估口径”解释卡，避免打断任务推进节奏。
 function expertOrchestrationCard(complete) {
   const experts = [
-    ["调研设计专家", "已完成", "设计问题结构、目标顾客、验证路径", "done"],
-    ["用户分析专家", complete ? "已完成" : "进行中", "分析会员分层、消费频次、权益使用行为", complete ? "done" : "active"],
-    ["数据分析专家", complete ? "已完成" : "排队中", "计算价格敏感度、流失风险、客群差异", complete ? "done" : "waiting"],
-    ["风险识别专家", complete ? "已完成" : "排队中", "识别反对理由、沟通风险、执行风险", complete ? "done" : "waiting"],
+    ["调研设计专家", "已完成", "把决策问题拆成可验证假设、目标客群和问卷模块。", "覆盖率 92%", "done"],
+    ["用户分析专家", complete ? "已完成" : "进行中", "识别当前会员、高价值用户和价格敏感用户的差异。", "分群清晰度 87%", complete ? "done" : "active"],
+    ["数据分析专家", complete ? "已完成" : "排队中", "读取会员、订单、权益使用数据，计算接受度与流失风险。", "口径完整度 81%", complete ? "done" : "waiting"],
+    ["风险识别专家", complete ? "已完成" : "排队中", "识别反感点、传播风险、老用户流失和执行阻力。", "风险召回率 78%", complete ? "done" : "waiting"],
   ];
 
   return `
@@ -1229,7 +1262,7 @@ function expertOrchestrationCard(complete) {
       <div class="expert-flow">
         ${experts
           .map(
-            ([name, status, desc, state], index) => `
+            ([name, status, desc, score, state], index) => `
               <section class="expert-step ${state}">
                 <div class="expert-avatar">${index + 1}</div>
                 <div>
@@ -1238,21 +1271,16 @@ function expertOrchestrationCard(complete) {
                     <span>${status}</span>
                   </div>
                   <p>${desc}</p>
+                  <small>${score}</small>
                 </div>
               </section>
             `,
           )
           .join("")}
       </div>
-      <div class="expert-insight-grid">
-        <section>
-          <h3>当前专家输出</h3>
-          <p>用户分析专家发现：高价值会员更关心权益稳定性，价格敏感用户更关心涨幅与替代方案。</p>
-        </section>
-        <section>
-          <h3>关键数据口径</h3>
-          <p>当前会员：过去 12 个月付费用户；高价值用户：年消费 Top 20%；流失风险：90 天未复购。</p>
-        </section>
+      <div class="expert-output-strip">
+        <div><strong>当前专家输出</strong><span>高价值会员更关心权益稳定性；价格敏感用户更关心涨幅与替代方案。</span></div>
+        <div><strong>读取数据</strong><span>会员表、订单表、权益使用表、历史调研记录</span></div>
       </div>
       <div class="expert-actions">
         <button type="button">生成调研方案</button>
@@ -1268,71 +1296,86 @@ function expertOrchestrationCard(complete) {
 // 推荐路径和下一步行动组成可汇报的商业报告骨架。
 function consultingReportCard(originalInput) {
   return `
-    <article class="workflow-card report-card">
-      <div class="report-cover">
-        <div>
-          <div class="card-kicker">商业分析报告</div>
-          <h2>会员年费涨价接受度调研报告</h2>
-          <p>围绕“${originalInput}”形成的仿真顾客调研结论、证据和建议。</p>
+    <article class="html-report-shell">
+      <aside class="report-toc">
+        <strong>报告目录</strong>
+        <a>01 摘要</a>
+        <a>02 客群</a>
+        <a>03 发现</a>
+        <a>04 矩阵</a>
+        <a>05 建议</a>
+      </aside>
+      <div class="html-report">
+        <div class="report-cover">
+          <div>
+            <div class="card-kicker">HTML 商业分析报告</div>
+            <h2>会员年费涨价接受度调研报告</h2>
+            <p>围绕“${originalInput}”形成的仿真顾客调研结论、证据和建议。</p>
+          </div>
+          <div class="confidence-block">
+            <span>置信度</span>
+            <strong>76%</strong>
+          </div>
         </div>
-        <div class="confidence-block">
-          <span>置信度</span>
-          <strong>76%</strong>
+
+        <section class="executive-summary">
+          <h3>01 Executive Summary</h3>
+          <p class="lead-conclusion">不建议直接从 199 元涨至 299 元。建议采用“权益升级 + 老会员缓冲 + 小范围测试”的分阶段方案。</p>
+          <ol>
+            <li>高价值会员可接受涨价，但要求权益可感知、可高频使用。</li>
+            <li>价格敏感会员存在明显流失风险，需要缓冲期或替代方案。</li>
+            <li>沟通方式会显著影响接受度，不能只表达“涨价”。</li>
+          </ol>
+        </section>
+
+        <div class="report-two-col">
+          <section class="report-section">
+            <h3>02 Customer Segments</h3>
+            <div class="segment-bars">
+              <div><span>高价值会员</span><strong>68%</strong><i style="width:68%"></i></div>
+              <div><span>当前会员</span><strong>54%</strong><i style="width:54%"></i></div>
+              <div><span>价格敏感用户</span><strong>31%</strong><i style="width:31%"></i></div>
+            </div>
+          </section>
+          <section class="report-section">
+            <h3>03 Key Findings</h3>
+            <details open>
+              <summary>发现 1：涨价不是核心问题</summary>
+              <p>核心是“权益是否值得”。顾客会接受价格变化，但需要看到稳定、常用、可立即感知的权益。</p>
+            </details>
+            <details>
+              <summary>发现 2：老会员需要被尊重</summary>
+              <p>直接涨价会触发被背刺感，需要缓冲期或老会员专属权益。</p>
+            </details>
+          </section>
         </div>
-      </div>
 
-      <section class="executive-summary">
-        <h3>01 Executive Summary</h3>
-        <p class="lead-conclusion">不建议直接从 199 元涨至 299 元。建议采用“权益升级 + 老会员缓冲 + 小范围测试”的分阶段方案。</p>
-        <ol>
-          <li>高价值会员可接受涨价，但要求权益可感知、可高频使用。</li>
-          <li>价格敏感会员存在明显流失风险，需要缓冲期或替代方案。</li>
-          <li>沟通方式会显著影响接受度，不能只表达“涨价”。</li>
-        </ol>
-      </section>
-
-      <div class="report-two-col">
         <section class="report-section">
-          <h3>02 Customer Segments</h3>
-          <div class="segment-bars">
-            <div><span>高价值会员</span><strong>68%</strong><i style="width:68%"></i></div>
-            <div><span>当前会员</span><strong>54%</strong><i style="width:54%"></i></div>
-            <div><span>价格敏感用户</span><strong>31%</strong><i style="width:31%"></i></div>
+          <h3>04 Decision Matrix</h3>
+          <table class="decision-matrix">
+            <thead>
+              <tr><th>方案</th><th>收入潜力</th><th>流失风险</th><th>推荐度</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>直接涨至 299</td><td>高</td><td>高</td><td>不推荐</td></tr>
+              <tr><td>老会员 199 / 新会员 299</td><td>中高</td><td>中</td><td>可测试</td></tr>
+              <tr><td>299 + 权益升级</td><td>高</td><td>中</td><td>推荐</td></tr>
+              <tr><td>分阶段涨价</td><td>中</td><td>低</td><td>强推荐</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="report-section recommendation-section">
+          <h3>05 Recommendation</h3>
+          <p>推荐路径：第一阶段保留老会员 199 元 3 个月；第二阶段推出 299 元权益升级包；第三阶段对高价值会员先做 A/B 测试。</p>
+          <div class="next-actions">
+            <span>设计权益包</span>
+            <span>测试沟通文案</span>
+            <span>选择测试客群</span>
+            <span>生成汇报版</span>
           </div>
         </section>
-        <section class="report-section">
-          <h3>03 Key Findings</h3>
-          <p><strong>发现 1：</strong>涨价不是核心问题，核心是“权益是否值得”。</p>
-          <p><strong>发现 2：</strong>老会员需要被尊重，直接涨价会触发被背刺感。</p>
-          <p><strong>发现 3：</strong>低风险试用入口可降低潜在会员犹豫。</p>
-        </section>
       </div>
-
-      <section class="report-section">
-        <h3>04 Decision Matrix</h3>
-        <table class="decision-matrix">
-          <thead>
-            <tr><th>方案</th><th>收入潜力</th><th>流失风险</th><th>推荐度</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>直接涨至 299</td><td>高</td><td>高</td><td>不推荐</td></tr>
-            <tr><td>老会员 199 / 新会员 299</td><td>中高</td><td>中</td><td>可测试</td></tr>
-            <tr><td>299 + 权益升级</td><td>高</td><td>中</td><td>推荐</td></tr>
-            <tr><td>分阶段涨价</td><td>中</td><td>低</td><td>强推荐</td></tr>
-          </tbody>
-        </table>
-      </section>
-
-      <section class="report-section recommendation-section">
-        <h3>05 Recommendation</h3>
-        <p>推荐路径：第一阶段保留老会员 199 元 3 个月；第二阶段推出 299 元权益升级包；第三阶段对高价值会员先做 A/B 测试。</p>
-        <div class="next-actions">
-          <span>设计权益包</span>
-          <span>测试沟通文案</span>
-          <span>选择测试客群</span>
-          <span>生成汇报版</span>
-        </div>
-      </section>
     </article>
   `;
 }
@@ -1349,6 +1392,7 @@ function evidenceCard(title, body, tag) {
 
 // 右侧栏保持单一职责：只展示仿真顾客留声与 hover 快速档案。
 // 报告证据应在中间报告卡片内沉淀，避免右栏信息堆叠影响用户查看顾客详情。
+// 不要在右侧追加“报告证据库”等第二任务，否则会削弱顾客留声区的核心价值。
 function taskRightPanel(complete) {
   if (complete) {
     return `
@@ -1422,6 +1466,8 @@ function taskPage() {
         </header>
 
         <section class="conversation-stack">
+          ${surveyJourney(complete)}
+
           <article class="message-row user-message-row">
             ${userAvatar()}
             <div class="user-request message-card">

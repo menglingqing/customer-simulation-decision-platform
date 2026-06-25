@@ -1482,10 +1482,75 @@ textarea {
   font-size: 13px;
 }
 
+/* Survey journey makes the task path visible before the cards start. */
+.survey-journey {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fbfaf8;
+}
+
+.journey-step {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 9px;
+  align-items: center;
+  min-height: 54px;
+  padding: 8px;
+  border-radius: 12px;
+  color: #777;
+}
+
+.journey-step span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font-weight: 700;
+}
+
+.journey-step strong,
+.journey-step p {
+  display: block;
+}
+
+.journey-step strong {
+  color: #333;
+  font-size: 13px;
+}
+
+.journey-step p {
+  margin: 3px 0 0;
+  font-size: 12px;
+}
+
+.journey-step.done span {
+  border-color: #cfe7d8;
+  background: #dcefe3;
+  color: #315b42;
+}
+
+.journey-step.active {
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(38, 33, 28, 0.06);
+}
+
+.journey-step.active span {
+  border-color: #222;
+  background: #111;
+  color: #fff;
+}
+
 /* Expert orchestration panel for the survey task.
    It makes the multi-agent work visible: research design, user analysis, data analysis, and risk review. */
 .expert-card h2,
-.report-card h2 {
+.html-report h2 {
   margin: 8px 0 0;
   font-size: 22px;
   line-height: 1.35;
@@ -1576,7 +1641,16 @@ textarea {
   line-height: 1.5;
 }
 
-.expert-insight-grid,
+.expert-step small {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #f6f5f3;
+  color: #666;
+  font-size: 11px;
+}
+
 .report-two-col {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1584,7 +1658,6 @@ textarea {
   margin-top: 16px;
 }
 
-.expert-insight-grid section,
 .report-section,
 .executive-summary {
   padding: 15px;
@@ -1593,14 +1666,12 @@ textarea {
   background: #fbfaf8;
 }
 
-.expert-insight-grid h3,
 .report-section h3,
 .executive-summary h3 {
   margin: 0 0 10px;
   font-size: 15px;
 }
 
-.expert-insight-grid p,
 .report-section p,
 .executive-summary p {
   margin: 0;
@@ -1626,6 +1697,31 @@ textarea {
 
 .expert-actions button:disabled {
   opacity: 0.45;
+}
+
+.expert-output-strip {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.expert-output-strip div {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.expert-output-strip strong {
+  font-size: 13px;
+}
+
+.expert-output-strip span {
+  color: #666;
+  line-height: 1.45;
 }
 
 .empty-conclusion {
@@ -1657,9 +1753,40 @@ textarea {
   background: #f1efeb;
 }
 
-/* Consulting-style report card shown after survey responses complete. */
-.report-card {
+/* Interactive HTML-style report shown after survey responses complete. */
+.html-report-shell {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 14px;
   border-color: #d7d2ca;
+}
+
+.report-toc {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: grid;
+  gap: 9px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fbfaf8;
+}
+
+.report-toc strong {
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.report-toc a {
+  color: #666;
+  font-size: 13px;
+}
+
+.html-report {
+  padding: 20px;
+  border: 1px solid #d7d2ca;
+  border-radius: 20px;
   background: #fff;
 }
 
@@ -1725,6 +1852,25 @@ textarea {
 
 .report-two-col .report-section {
   margin-top: 0;
+}
+
+.report-section details {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.report-section details:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.report-section summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.report-section details p {
+  margin-top: 8px;
 }
 
 .segment-bars {

@@ -1007,16 +1007,17 @@ img, svg { display: block; max-width: 100%; }
    ================================================ */
 
 .skills-shell {
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
   grid-template-columns: 56px 1fr;
   gap: 12px;
   padding: 12px;
   background: var(--bg);
+  overflow: hidden;
 }
 
 .icon-rail {
-  min-height: calc(100vh - 24px);
+  height: calc(100vh - 24px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1049,11 +1050,13 @@ img, svg { display: block; max-width: 100%; }
 .rail-spacer { flex: 1; }
 
 .skills-main {
-  min-height: calc(100vh - 24px);
+  height: calc(100vh - 24px);
   padding: 40px 56px;
   background: var(--surface);
   border-radius: var(--radius-2xl);
   border: 1px solid var(--border-light);
+  overflow: auto;
+}
 }
 
 .skills-header {
@@ -1250,12 +1253,13 @@ img, svg { display: block; max-width: 100%; }
    ================================================ */
 
 .task-shell {
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
   grid-template-columns: 52px minmax(580px, 1fr) 340px;
   gap: 12px;
   padding: 12px;
   background: var(--bg);
+  overflow: hidden;
 }
 
 /* Task Left Rail */
@@ -1371,15 +1375,16 @@ img, svg { display: block; max-width: 100%; }
 /* Conversation Stack */
 
 .conversation-stack {
+  flex: 1;
   display: grid;
   gap: 14px;
   max-width: 780px;
   width: 100%;
   margin: 20px auto 0;
-  flex: 1;
   overflow-y: auto;
   padding: 0 4px 16px;
   scroll-behavior: smooth;
+  min-height: 0;
 }
 
 /* Message rows — avatar + card */
@@ -1767,6 +1772,463 @@ img, svg { display: block; max-width: 100%; }
 
 /* Empty conclusion */
 
+/* ================================================
+   Survey Journey — 调研问卷用户旅程
+   ================================================ */
+
+.survey-journey {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--surface-raised);
+}
+
+.journey-step {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 8px;
+  align-items: center;
+  min-height: 52px;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  color: var(--text-tertiary);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.journey-step span {
+  display: grid;
+  place-items: center;
+  width: 28px; height: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.journey-step strong { display: block; color: var(--text); font-size: 13px; }
+.journey-step p { margin: 2px 0 0; font-size: 11px; }
+
+.journey-step.done span {
+  border-color: var(--success-border);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.journey-step.active {
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+.journey-step.active span {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--text-inverse);
+}
+
+/* ================================================
+   Expert Orchestration — Agent 专家编排面板
+   ================================================ */
+
+.expert-card h2 {
+  margin: 8px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.expert-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.orchestration-badge {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.expert-flow {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.expert-step {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.expert-step.active {
+  border-color: var(--accent);
+  background: var(--accent-surface);
+}
+
+.expert-step.waiting {
+  color: var(--text-tertiary);
+  background: var(--surface-raised);
+  opacity: 0.7;
+}
+
+.expert-avatar {
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.expert-step.done .expert-avatar {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.expert-step.active .expert-avatar {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.expert-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.expert-row strong { font-size: 14px; }
+
+.expert-row span {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.expert-step p {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.expert-step small {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  color: var(--text-tertiary);
+  font-size: 11px;
+  border: 1px solid var(--border-light);
+}
+
+.expert-output-strip {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.expert-output-strip div {
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.expert-output-strip strong { font-size: 13px; }
+
+.expert-output-strip span {
+  color: var(--text-secondary);
+  line-height: 1.45;
+  font-size: 13px;
+}
+
+.expert-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.expert-actions button {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.expert-actions button:hover { background: var(--surface-raised); }
+.expert-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ================================================
+   HTML Consulting Report — 咨询级商业分析报告
+   ================================================ */
+
+.html-report-shell {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.report-toc {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.report-toc strong {
+  margin-bottom: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.report-toc a {
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.report-toc a:hover { color: var(--accent); }
+
+.html-report {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+}
+
+.report-cover {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.html-report h2 { margin: 8px 0 0; font-size: 22px; font-weight: 600; line-height: 1.35; }
+.report-cover p { margin: 8px 0 0; color: var(--text-secondary); }
+
+.confidence-block {
+  display: grid;
+  place-items: center;
+  flex: 0 0 100px;
+  min-height: 88px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.confidence-block span { color: var(--text-tertiary); font-size: 12px; }
+.confidence-block strong { margin-top: 2px; font-size: 28px; font-weight: 600; color: var(--accent); }
+
+.executive-summary {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+
+.executive-summary h3 { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
+
+.lead-conclusion {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text) !important;
+  line-height: 1.5;
+}
+
+.executive-summary ol {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Report two-col layout */
+
+.report-two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.report-section {
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  margin-top: 16px;
+}
+
+.report-two-col .report-section { margin-top: 0; }
+
+.report-section h3 { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
+
+.report-section p { color: var(--text-secondary); line-height: 1.6; }
+
+.report-section details {
+  padding: 10px 0;
+  border-top: 1px solid var(--border-light);
+}
+
+.report-section details:first-of-type { border-top: 0; padding-top: 0; }
+
+.report-section summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.report-section details p { margin-top: 8px; }
+
+/* Segment bars */
+
+.segment-bars { display: grid; gap: 12px; }
+
+.segment-bars div {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+
+.segment-bars span { font-size: 13px; color: var(--text-secondary); }
+.segment-bars strong { font-size: 14px; font-weight: 600; }
+
+.segment-bars i {
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+}
+
+.segment-bars div::after {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 6px;
+  z-index: -1;
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  content: "";
+}
+
+/* Decision matrix */
+
+.decision-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+}
+
+.decision-matrix th, .decision-matrix td {
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: left;
+}
+
+.decision-matrix th {
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.decision-matrix tr:last-child td { border-bottom: 0; }
+
+.recommendation-section {
+  background: var(--surface-raised);
+  border-color: var(--accent);
+}
+
+/* Evidence cards */
+
+.evidence-panel { overflow: auto; }
+
+.evidence-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.evidence-card {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.evidence-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+
+.evidence-card span {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.evidence-card h3 { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
+.evidence-card p { margin: 0; color: var(--text-secondary); line-height: 1.55; }
+
+/* Completed insight panel */
+
+.completed-insight-panel { overflow: visible; }
+.completed-voice-list { overflow-y: auto; margin-top: 18px; padding-right: 3px; min-height: 0; }
+.completed-insight-panel .task-voice-card { padding: 12px; }
+.completed-insight-panel .task-voice-card .quote { margin-bottom: 4px; }
+
+/* ================================================
+   Empty conclusion
+   ================================================ */
+
 .empty-conclusion {
   padding: 28px;
   border: 1px dashed var(--border);
@@ -1842,7 +2304,7 @@ img, svg { display: block; max-width: 100%; }
   background: var(--surface);
   border-radius: var(--radius-2xl);
   border: 1px solid var(--border-light);
-  overflow: visible;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -1874,9 +2336,10 @@ img, svg { display: block; max-width: 100%; }
 
 .task-right-panel .voice-list {
   flex: 1;
-  overflow: visible;
+  overflow-y: auto;
   margin-top: 14px;
   padding-right: 4px;
+  min-height: 0;
 }
 
 /* ---- Customer hover popover ---- */

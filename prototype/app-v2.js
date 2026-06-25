@@ -585,152 +585,56 @@ function taskPage() {
         ${taskRailIcon("通知", "bell")}
         ${taskRailIcon("设置", "settings")}
       </aside>
-
       <main class="task-main">
         <header class="task-header">
-          <div>
-            <div class="task-type">${capability}</div>
-            <h1>${taskTitle}</h1>
-          </div>
+          <div><div class="task-type">${capability}</div><h1>${taskTitle}</h1></div>
           <span class="task-status ${complete ? "done" : ""}">${complete ? "已完成" : "进行中"}</span>
         </header>
-
         <section class="conversation-stack">
-          <!-- 用户原始输入 -->
-          <article class="message-row user-message-row">
-            ${userAvatar()}
-            <div class="user-request"><p>${originalInput}</p></div>
-          </article>
-
-          <!-- 澄清问题 -->
-          <article class="message-row bot-message-row">
-            ${botAvatar()}
-            <div class="workflow-card collapsible-card ${taskState.collapsed.clarify ? "collapsed" : ""}">
-              <div class="collapsible-head">
-                <div class="card-title">为了设计更准确的调研，我需要先确认两个问题：</div>
-                ${collapseToggle("clarify")}
-              </div>
-              <div class="collapsible-body">
-                <div class="clarify-grid">
-                  <div class="question-panel">
-                    <h3>1. 你更想验证哪一类顾客？</h3>
-                    <div class="option-list">
-                      ${["当前会员", "潜在会员", "高价值用户", "价格敏感用户"].map(x => optionButton("customers", x)).join("")}
-                    </div>
-                  </div>
-                  <div class="question-panel">
-                    <h3>2. 你更关心哪一个决策风险？</h3>
-                    <div class="option-list">
-                      ${["涨价接受度", "老用户流失", "权益感知", "竞品比较"].map(x => optionButton("risks", x)).join("")}
-                    </div>
-                  </div>
-                </div>
-                <button class="primary-action centered-action" onclick="generatePlan()">生成调研方案</button>
-              </div>
-            </div>
-          </article>
-
-          ${planVisible ? `
-            <!-- 调研方案 -->
-            <article class="message-row bot-message-row">
-              ${botAvatar()}
-              <div class="workflow-card plan-card collapsible-card ${taskState.collapsed.plan ? "collapsed" : ""}">
-                <div class="collapsible-head">
-                  <div>
-                    <div class="card-kicker">调研方案</div>
-                    <h2>围绕"${originalInput}"验证顾客接受度与主要顾虑</h2>
-                  </div>
-                  ${collapseToggle("plan")}
-                </div>
-                <div class="collapsible-body">
-                  <div class="plan-grid">
-                    <div>
-                      <h3>调研目标</h3>
-                      <p>判断顾客对"${originalInput}"的理解、可接受条件与潜在流失风险。</p>
-                    </div>
-                    <div>
-                      <h3>目标顾客</h3>
-                      <p>${taskState.selectedCustomers.join("、")}</p>
-                    </div>
-                  </div>
-                  <ol class="module-list">
-                    <li>当前会员价值感知</li>
-                    <li>涨价接受区间</li>
-                    <li>权益补强偏好</li>
-                    <li>流失风险判断</li>
-                    <li>沟通方式偏好</li>
-                  </ol>
-                  <button class="primary-action plan-action" onclick="startCollecting()" ${taskState.stage !== "plan" ? "disabled" : ""}>
-                    开始让仿真顾客回答
-                  </button>
-                </div>
-              </div>
-            </article>
-          ` : ""}
-
-          ${collectingVisible ? `
-            <!-- 收集进度 -->
-            <article class="workflow-card progress-card">
-              <div class="progress-head">
-                <div>
-                  <div class="card-kicker">收集进度</div>
-                  <h2>${complete ? "顾客回复已完成" : "正在收集仿真顾客回答"}</h2>
-                </div>
-                <strong>${taskState.answered}/${taskState.total}</strong>
-              </div>
-              <div class="progress-track"><span style="width:${(taskState.answered / taskState.total) * 100}%"></span></div>
-              <div class="distribution">
-                <div><strong>8</strong><span>支持</span></div>
-                <div><strong>12</strong><span>犹豫</span></div>
-                <div><strong>6</strong><span>反对</span></div>
-                <div><strong>4</strong><span>条件接受</span></div>
-              </div>
-            </article>
-          ` : ""}
-
-          ${complete ? `
-            <!-- 调研结论 -->
-            <article class="workflow-card conclusion-card">
-              <div class="card-kicker">调研结论</div>
-              <h2>"${originalInput}"并非完全不可接受，但需要清晰的权益补强和沟通理由</h2>
-              <div class="finding-list">
-                <p><strong>关键发现 1：</strong>老用户更担心"被涨价"的感觉，而不是单纯价格本身。沟通方式比价格数字更重要。</p>
-                <p><strong>关键发现 2：</strong>高价值用户愿意接受涨价，但期待服务稳定性和高频权益的同步升级。</p>
-                <p><strong>关键发现 3：</strong>潜在会员需要低风险试用入口，否则会延迟甚至放弃开通决策。</p>
-              </div>
-              <div class="next-actions">
-                <span>建议先小范围测试</span>
-                <span>补充高频权益</span>
-                <span>提前解释涨价原因</span>
-              </div>
-            </article>
-          ` : `
-            <article class="empty-conclusion">调研结论将在顾客回复完成后生成</article>
-          `}
+          ${surveyJourney(complete)}
+          <article class="message-row user-message-row">${userAvatar()}<div class="user-request"><p>${originalInput}</p></div></article>
+          <article class="message-row bot-message-row">${botAvatar()}<div class="workflow-card collapsible-card ${taskState.collapsed.clarify ? "collapsed" : ""}"><div class="collapsible-head"><div class="card-title">为了设计更准确的调研，我需要先确认两个问题：</div>${collapseToggle("clarify")}</div><div class="collapsible-body"><div class="clarify-grid"><div class="question-panel"><h3>1. 你更想验证哪一类顾客？</h3><div class="option-list">${["当前会员", "潜在会员", "高价值用户", "价格敏感用户"].map(x => optionButton("customers", x)).join("")}</div></div><div class="question-panel"><h3>2. 你更关心哪一个决策风险？</h3><div class="option-list">${["涨价接受度", "老用户流失", "权益感知", "竞品比较"].map(x => optionButton("risks", x)).join("")}</div></div></div><button class="primary-action centered-action" onclick="generatePlan()">生成调研方案</button></div></div></article>
+          ${planVisible ? planCard(originalInput) : ""}
+          ${planVisible ? expertOrchestrationCard(complete) : ""}
+          ${collectingVisible ? progressCard(complete) : ""}
+          ${complete ? consultingReportCard(originalInput) : '<article class="empty-conclusion">调研结论将在顾客回复完成后生成</article>'}
         </section>
-
-        <div class="task-input-bar">
-          <span>${icon("plus")}</span>
-          <input placeholder="继续补充你的调研要求..." />
-          <span>${icon("resource")}资源</span>
-          <span>${icon("spark")}Skill</span>
-          <span>${icon("mic")}麦克风</span>
-          <button class="submit-btn">${icon("arrowUp")}</button>
-        </div>
+        <div class="task-input-bar"><span>${icon("plus")}</span><input placeholder="继续补充你的调研要求..." /><span>${icon("resource")}资源</span><span>${icon("spark")}Skill</span><span>${icon("mic")}麦克风</span><button class="submit-btn">${icon("arrowUp")}</button></div>
       </main>
-
-      <aside class="task-right-panel">
-        <div class="panel-header">
-          <div>
-            <h2>顾客留声</h2>
-            <p>本次调研回答流</p>
-          </div>
-          <span class="panel-badge">已回答 ${taskState.answered}/${taskState.total}</span>
-        </div>
-        <div class="voice-list">${taskCustomers.map(taskVoiceCard).join("")}</div>
-      </aside>
+      ${taskRightPanel(complete)}
     </div>
   `;
+}
+
+function planCard(originalInput) { return `<article class="message-row bot-message-row">${botAvatar()}<div class="workflow-card plan-card collapsible-card ${taskState.collapsed.plan ? "collapsed" : ""}"><div class="collapsible-head"><div><div class="card-kicker">调研方案</div><h2>围绕"${originalInput}"验证顾客接受度与主要顾虑</h2></div>${collapseToggle("plan")}</div><div class="collapsible-body"><div class="plan-grid"><div><h3>调研目标</h3><p>判断顾客对"${originalInput}"的理解、可接受条件与潜在流失风险。</p></div><div><h3>目标顾客</h3><p>${taskState.selectedCustomers.join("、")}</p></div></div><ol class="module-list"><li>当前会员价值感知</li><li>涨价接受区间</li><li>权益补强偏好</li><li>流失风险判断</li><li>沟通方式偏好</li></ol><button class="primary-action plan-action" onclick="startCollecting()" ${taskState.stage !== "plan" ? "disabled" : ""}>开始让仿真顾客回答</button></div></div></article>`; }
+
+function progressCard(complete) { return `<article class="workflow-card progress-card"><div class="progress-head"><div><div class="card-kicker">收集进度</div><h2>${complete ? "顾客回复已完成" : "正在收集仿真顾客回答"}</h2></div><strong>${taskState.answered}/${taskState.total}</strong></div><div class="progress-track"><span style="width:${(taskState.answered / taskState.total) * 100}%"></span></div><div class="distribution"><div><strong>8</strong><span>支持</span></div><div><strong>12</strong><span>犹豫</span></div><div><strong>6</strong><span>反对</span></div><div><strong>4</strong><span>条件接受</span></div></div></article>`; }
+
+function surveyJourney(complete) {
+  const stageOrder = ["clarify", "plan", "collecting", "report"];
+  const activeStage = complete ? "report" : taskState.stage;
+  const activeIndex = stageOrder.indexOf(activeStage);
+  const steps = [["clarify","确认问题","锁定顾客与风险"],["plan","设计调研","生成问卷方案"],["collecting","顾客回答","收集多视角反馈"],["report","输出报告","形成商业建议"]];
+  return `<section class="survey-journey" aria-label="调研问卷用户旅程">${steps.map(([key,title,desc],i)=>`<div class="journey-step ${i<activeIndex?"done":""} ${i===activeIndex?"active":""}"><span>${i+1}</span><div><strong>${title}</strong><p>${desc}</p></div></div>`).join("")}</section>`;
+}
+
+function expertOrchestrationCard(complete) {
+  const experts = [["调研设计专家","已完成","把决策问题拆成可验证假设、目标客群和问卷模块。","覆盖率 92%","done"],["用户分析专家",complete?"已完成":"进行中","识别当前会员、高价值用户和价格敏感用户的差异。","分群清晰度 87%",complete?"done":"active"],["数据分析专家",complete?"已完成":"排队中","读取会员、订单、权益使用数据，计算接受度与流失风险。","口径完整度 81%",complete?"done":"waiting"],["风险识别专家",complete?"已完成":"排队中","识别反感点、传播风险、老用户流失和执行阻力。","风险召回率 78%",complete?"done":"waiting"]];
+  return `<article class="workflow-card expert-card"><div class="expert-head"><div><div class="card-kicker">Agent 专家编排中</div><h2>${complete?"专家协作已完成，正在沉淀报告证据":"多位专家正在协作分析调研问题"}</h2></div><span class="orchestration-badge">${complete?"4 / 4 已完成":"2 / 4 忙碌中"}</span></div><div class="expert-flow">${experts.map(([name,status,desc,score,state],i)=>`<section class="expert-step ${state}"><div class="expert-avatar">${i+1}</div><div><div class="expert-row"><strong>${name}</strong><span>${status}</span></div><p>${desc}</p><small>${score}</small></div></section>`).join("")}</div><div class="expert-output-strip"><div><strong>当前专家输出</strong><span>高价值会员更关心权益稳定性；价格敏感用户更关心涨幅与替代方案。</span></div><div><strong>读取数据</strong><span>会员表、订单表、权益使用表、历史调研记录</span></div></div><div class="expert-actions"><button type="button">生成调研方案</button><button type="button" onclick="startCollecting()" ${complete?"disabled":""}>让仿真顾客回答</button><button type="button">查看专家工作日志</button></div></article>`;
+}
+
+function consultingReportCard(originalInput) {
+  return `<article class="html-report-shell"><aside class="report-toc"><strong>报告目录</strong><a>01 摘要</a><a>02 客群</a><a>03 发现</a><a>04 矩阵</a><a>05 建议</a></aside><div class="html-report"><div class="report-cover"><div><div class="card-kicker">HTML 商业分析报告</div><h2>会员年费涨价接受度调研报告</h2><p>围绕"${originalInput}"形成的仿真顾客调研结论、证据和建议。</p></div><div class="confidence-block"><span>置信度</span><strong>76%</strong></div></div><section class="executive-summary"><h3>01 Executive Summary</h3><p class="lead-conclusion">不建议直接从 199 元涨至 299 元。建议采用"权益升级 + 老会员缓冲 + 小范围测试"的分阶段方案。</p><ol><li>高价值会员可接受涨价，但要求权益可感知、可高频使用。</li><li>价格敏感会员存在明显流失风险，需要缓冲期或替代方案。</li><li>沟通方式会显著影响接受度，不能只表达"涨价"。</li></ol></section><div class="report-two-col"><section class="report-section"><h3>02 Customer Segments</h3><div class="segment-bars"><div><span>高价值会员</span><strong>68%</strong><i style="width:68%"></i></div><div><span>当前会员</span><strong>54%</strong><i style="width:54%"></i></div><div><span>价格敏感用户</span><strong>31%</strong><i style="width:31%"></i></div></div></section><section class="report-section"><h3>03 Key Findings</h3><details open><summary>发现 1：涨价不是核心问题</summary><p>核心是"权益是否值得"。顾客会接受价格变化，但需要看到稳定、常用、可立即感知的权益。</p></details><details><summary>发现 2：老会员需要被尊重</summary><p>直接涨价会触发被背刺感，需要缓冲期或老会员专属权益。</p></details></section></div><section class="report-section"><h3>04 Decision Matrix</h3><table class="decision-matrix"><thead><tr><th>方案</th><th>收入潜力</th><th>流失风险</th><th>推荐度</th></tr></thead><tbody><tr><td>直接涨至 299</td><td>高</td><td>高</td><td>不推荐</td></tr><tr><td>老会员 199 / 新会员 299</td><td>中高</td><td>中</td><td>可测试</td></tr><tr><td>299 + 权益升级</td><td>高</td><td>中</td><td>推荐</td></tr><tr><td>分阶段涨价</td><td>中</td><td>低</td><td>强推荐</td></tr></tbody></table></section><section class="report-section recommendation-section"><h3>05 Recommendation</h3><p>推荐路径：第一阶段保留老会员 199 元 3 个月；第二阶段推出 299 元权益升级包；第三阶段对高价值会员先做 A/B 测试。</p><div class="next-actions"><span>设计权益包</span><span>测试沟通文案</span><span>选择测试客群</span><span>生成汇报版</span></div></section></div></article>`;
+}
+
+function evidenceCard(title, body, tag) { return `<article class="evidence-card"><span>${tag}</span><h3>${title}</h3><p>${body}</p></article>`; }
+
+function taskRightPanel(complete) {
+  const panelClass = complete ? "task-right-panel completed-insight-panel" : "task-right-panel";
+  const listClass = complete ? "voice-list completed-voice-list" : "voice-list";
+  const answered = complete ? taskState.total : taskState.answered;
+  const desc = complete ? "已用于生成报告的回答流" : "本次调研回答流";
+  return `<aside class="${panelClass}"><div class="panel-header"><div><h2>顾客留声</h2><p>${desc}</p></div><span class="panel-badge">已回答 ${answered}/${taskState.total}</span></div><div class="${listClass}">${taskCustomers.map(taskVoiceCard).join("")}</div></aside>`;
 }
 
 /* ================================================

@@ -323,6 +323,82 @@ status 可选：
 * nextActions
 * generatedAt
 
+## ExpertOrchestration 专家编排
+
+ExpertOrchestration 描述调研问卷任务中多个专业 Agent 的协作状态。
+
+字段建议：
+
+* id
+* taskId
+* experts
+* currentOutput
+* referencedDataSources
+* updatedAt
+
+experts 字段建议：
+
+* id
+* name
+* role
+* status
+* responsibility
+* evaluationLabel
+
+status 可选：
+
+* waiting
+* active
+* done
+
+当前 MVP 默认专家：
+
+* 调研设计专家
+* 用户分析专家
+* 数据分析专家
+* 风险识别专家
+
+使用原则：
+
+* 专家编排用于展示“谁在工作”和“当前产出”，不是解释型帮助文档。
+* 不在任务页展示“为什么需要这些 Agent”“能力评估口径”等大段说明。
+
+## HtmlSurveyReport HTML 调研报告
+
+HtmlSurveyReport 是调研问卷完成后的交互式报告对象。
+
+字段建议：
+
+* id
+* taskId
+* title
+* confidence
+* executiveSummary
+* customerSegments
+* keyFindings
+* decisionMatrix
+* recommendation
+* nextActions
+* generatedAt
+
+keyFindings 可以支持展开 / 收起：
+
+* title
+* summary
+* evidenceRefs
+
+decisionMatrix 字段建议：
+
+* optionName
+* revenuePotential
+* churnRisk
+* recommendationLevel
+
+使用原则：
+
+* 报告应以 HTML 页面式结构展示，而不是纯文本长段落。
+* 报告证据应嵌入报告模块或可展开详情中，不放到右侧顾客留声区。
+
 ## InterviewContext 深度访谈上下文
 
 InterviewContext 由首页右侧顾客心声点击创建，用于进入深度访谈页。
@@ -436,6 +512,8 @@ TaskUiState 只描述前端展示状态，不属于核心业务结论。
 * activeRightPanel
 * hoveredCustomerId
 * lastFocusedCardId
+* journeyStage
+* reportTocActiveSection
 
 collapsedSections 示例：
 
@@ -451,6 +529,8 @@ collapsedSections 示例：
 * 折叠 / 展开只影响界面展示，不改变 ClarificationQuestion、SurveyPlan 或 SurveyConclusion。
 * 用户点击“生成调研方案”后，澄清问题卡不应被强制收起。
 * hover 弹窗状态不需要持久化，通常只保存在前端运行时。
+* journeyStage 用于驱动“确认问题 → 设计调研 → 顾客回答 → 输出报告”的用户旅程条。
+* activeRightPanel 在当前 MVP 中应保持为 customer_voice，不应切换为 evidence_panel。
 
 ## CustomerQuickProfile 顾客快速档案
 
